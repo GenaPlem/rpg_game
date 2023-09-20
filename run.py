@@ -1,3 +1,6 @@
+import os
+
+
 class Player:
     def __init__(self, username):
         self.username = username
@@ -17,13 +20,19 @@ class Enemy:
         self.hp = self.max_hp
 
 
+def clear():
+    os.system('clear')
+
+
 def initialize_game():
+    clear()
     username = input('Enter your Name! ')
     new_user = Player(username)
     print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
 
 
 def show_rules():
+    clear()
     print('''
   _____                              _       ______
  |  __ \                            ( )     |  ____|
@@ -45,6 +54,7 @@ def show_rules():
 
 
 def main_menu():
+    clear()
     print('''
   _____                              _       ______
  |  __ \                            ( )     |  ____|
