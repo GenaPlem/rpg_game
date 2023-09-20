@@ -23,6 +23,27 @@ def initialize_game():
     print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
 
 
+def show_rules():
+    print('''
+  _____                              _       ______
+ |  __ \                            ( )     |  ____|
+ | |  | |_ __ __ _  __ _  ___  _ __ |/ ___  | |__  _   _  ___
+ | |  | | '__/ _` |/ _` |/ _ \| '_ \  / __| |  __|| | | |/ _ \\
+ | |__| | | | (_| | (_| | (_) | | | | \__ \ | |___| |_| |  __/
+ |_____/|_|  \__,_|\__, |\___/|_| |_| |___/ |______\__, |\___|
+                    __/ |                           __/ |
+                   |___/                           |___/
+    ''')
+    print("------------------------------------------------")
+    print("1. You will be presented with a list of options at each stage of the game.")
+    print("2. To make a choice, simply enter the number corresponding to the option you'd like to choose.")
+    print("3. To access the main menu at any time, enter '0' or 'P'.")
+    print("------------------------------------------------")
+    print("Press 'Enter' to return to the main menu.")
+    input('> ')
+    main_menu()
+
+
 def main_menu():
     print('''
   _____                              _       ______
@@ -46,12 +67,12 @@ def main_menu():
     elif choise == '2':
         pass
     elif choise == '3':
-        pass
+        show_rules()
     elif choise == '4':
         quit()
     else:
-        main_menu()
         print('No such options! Please select number from menu options')
+        main_menu()
 
 
 main_menu()
