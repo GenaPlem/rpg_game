@@ -9,6 +9,14 @@ class Player:
         self.inventory = []
 
 
+class Enemy:
+    def __init__(self, name):
+        self.name = name
+        self.attack_dmg = 5
+        self.max_hp = 50
+        self.hp = self.max_hp
+
+
 def initialize_game():
     username = input('Enter your Name! ')
     new_user = Player(username)
