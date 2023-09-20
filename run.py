@@ -23,4 +23,25 @@ def initialize_game():
     print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
 
 
-initialize_game()
+def main_menu():
+    print("1. New Game")
+    print("2. Load Game")
+    print("3. Rules")
+    print("4. Quit")
+
+    choise = input('# ')
+
+    if choise == '1':
+        initialize_game()
+    elif choise == '2':
+        pass
+    elif choise == '3':
+        pass
+    elif choise == '4':
+        quit()
+    else:
+        main_menu()
+        print('No such options! Please select number from menu options')
+
+
+main_menu()
