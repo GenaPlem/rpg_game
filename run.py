@@ -1,14 +1,17 @@
 class Player:
-    def __init__(self, username, attack_dmg, heath_points, coins):
+    def __init__(self, username):
         self.username = username
-        self.attack_dmg = attack_dmg
-        self.heath_points = heath_points
-        self.coins = coins
+        self.attack_dmg = 10
+        self.hp = 20
+        self.max_hp = 50
+        self.coins = 0
+        self.potions = 0
+        self.inventory = []
 
 
 def initialize_game():
     username = input('Enter your Name! ')
-    new_user = Player(username, 10, 100, 0)
+    new_user = Player(username)
     print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
 
 
