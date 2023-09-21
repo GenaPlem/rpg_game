@@ -13,6 +13,7 @@ class Player:
         self.max_hp = 50
         self.coins = 0
         self.potions = 0
+        self.location = 'Cave'
         self.inventory = []
 
 
@@ -64,9 +65,42 @@ def initialize_game():
     clear()
     ascii_art_logo()
     username = input('Enter your Name! ')
-    new_user = Player(username)
-    return new_user
+    player = Player(username)
+    return player
     # print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
+
+
+def start_new_game(player):
+    """
+    Function for game intoduction
+    """
+    print('You wake up in a dimly lit cave, the flickering light of a campfire casting shadows on the walls.')
+    print('A Stranger sits across from you, tending to the fire.\n')
+    print(f'''Stranger:
+        Hey {player.username}, you're finally awake.
+        I heard a dragon's roar and then found you unconscious at the foot of the mountain.
+        You must have been at the summit where, according to legends, a fearsome Dragon resides.
+    ''')
+    print(f'Your health is {player.hp}/{player.max_hp}HP')
+    print('and the stranger offers you a mysterious potion.\n')
+    print(f'''Stranger:
+        This will help you recover
+        *He takes you a mysterious potion*
+        Will you drink it? (Type Y (yes) or N (no))
+    ''')
+    drink_potion = input('# ').lower()
+    if drink_potion == 'y':
+        player.hp = player.max_hp
+        print(f'Your health now is {player.hp}/{player.max_hp}HP\n')
+        print('''Stranger:
+        Good. Now you are ready to go.
+        One more thing. If you want to get more potions like this, just find the merchant in the village
+        ''')
+    elif drink_potion == 'n':
+        print('''Stranger:
+        As you say so...
+        By the way, if you are interested in survive, you have to find the merchant in the village
+        ''')
 
 
 def show_rules():
@@ -99,7 +133,8 @@ def main_menu():
     choise = input('# ')
 
     if choise == '1':
-        initialize_game()
+        player = initialize_game()
+        start_new_game(player)
     elif choise == '2':
         pass
     elif choise == '3':
