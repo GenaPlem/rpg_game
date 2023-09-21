@@ -15,6 +15,7 @@ class Player:
         self.potions = 0
         self.location = 'Cave'
         self.inventory = []
+        self.explored_locations = []
 
 
 class Enemy:
@@ -145,6 +146,9 @@ def start_new_game(player):
 
 
 def cave_actions(player):
+    """
+    Function with actions for Cave location
+    """
     show_stats(player)
     print('1. Leave the Cave')
     print('2. Explore the Cave')
@@ -158,7 +162,25 @@ def cave_actions(player):
         print('You left the Cave and move to the Forest')
         continue_input()
     elif choise == '2':
-        pass
+
+        if 'Cave' not in player.explored_locations:
+            show_stats(player)
+            print('Exploring the Cave...')
+            continue_input()
+            print('Well well! You find someting')
+            print("It's a lit bag of money!!")
+            print('*You find 10 coins!*')
+            continue_input()
+            player.coins += 10
+            player.explored_locations.append('Cave')
+            show_stats(player)
+            cave_actions(player)
+        else:
+            show_stats(player)
+            print('You are already explored this location!')
+            continue_input()
+            cave_actions(player)
+
     elif choise == '3':
         show_stats(player)
         print('''Stranger:
