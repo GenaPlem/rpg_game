@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 class Player:
@@ -37,6 +38,10 @@ def ascii_art():
     ''')
 
 
+def text_align_center(text):
+    print(text.center(shutil.get_terminal_size()[0]))
+
+
 def initialize_game():
     clear()
     ascii_art()
@@ -54,7 +59,7 @@ def show_rules():
     print("2. To make a choice, simply enter the number corresponding to the option you'd like to choose.")
     print("3. To go to main menu and save the game at any time, enter '0'.")
     print("------------------------------------------------")
-    print("Press 'Enter' to return to the main menu.")
+    text_align_center("Press 'Enter' to return to the main menu.")
     input('> ')
     main_menu()
 
@@ -62,10 +67,10 @@ def show_rules():
 def main_menu():
     clear()
     ascii_art()
-    print("1. New Game")
-    print("2. Load Game")
-    print("3. Rules")
-    print("4. Quit")
+    text_align_center("1. New Game")
+    text_align_center("2. Load Game")
+    text_align_center("3. Rules")
+    text_align_center("4. Quit")
 
     choise = input('# ')
 
