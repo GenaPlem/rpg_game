@@ -97,7 +97,7 @@ def initialize_game():
             continue_input()
 
 
-def start_new_game(player):
+def prolog(player):
     """
     Function for game introduction
     """
@@ -161,6 +161,7 @@ def cave_actions(player):
         show_stats(player)
         print('You left the Cave and move to the Forest')
         continue_input()
+        forest_actions(player)
     elif choise == '2':
 
         if 'Cave' not in player.explored_locations:
@@ -195,6 +196,20 @@ def cave_actions(player):
         cave_actions(player)
 
 
+def forest_actions(player):
+    show_stats(player)
+    print('1. Enter the Cave')
+
+    choise = input('# ')
+
+    if choise == '1':
+        player.location = 'Cave'
+        show_stats(player)
+        print('You are enter the Cave')
+        continue_input()
+        cave_actions(player)
+
+
 def show_rules():
     """
     Function to show rules of the game
@@ -213,7 +228,6 @@ def main_menu():
     """
     Function to show main menu
     """
-    # clear()
     ascii_art_logo()
     text_align_center("1. New Game")
     text_align_center("2. Load Game")
@@ -224,7 +238,7 @@ def main_menu():
 
     if choise == '1':
         player = initialize_game()
-        start_new_game(player)
+        prolog(player)
         cave_actions(player)
     elif choise == '2':
         pass
