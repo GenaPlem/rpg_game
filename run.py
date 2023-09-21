@@ -67,13 +67,15 @@ def initialize_game():
     username = input('Enter your Name! ')
     player = Player(username)
     return player
-    # print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
 
 
 def start_new_game(player):
     """
     Function for game intoduction
     """
+    clear()
+    print(f'LOCATION: {player.location}')
+    print(f'HP: {player.hp}/{player.max_hp}\n')
     print('You wake up in a dimly lit cave, the flickering light of a campfire casting shadows on the walls.')
     print('A Stranger sits across from you, tending to the fire.\n')
     print(f'''Stranger:
@@ -101,6 +103,28 @@ def start_new_game(player):
         As you say so...
         By the way, if you are interested in survive, you have to find the merchant in the village
         ''')
+
+
+def cave_actions(player):
+    print('1. Leave the Cave')
+    print('2. Explore the Cave')
+    print('3. Talk to Stranger')
+
+    choise = input('# ')
+
+    if choise == '1':
+        player.location = 'Forest'
+    elif choise == '2':
+        pass
+    elif choise == '3':
+        print('''Stranger:
+        Ah, you're still here? Time waits for no one, especially not in these treacherous lands. I suggest you move along.
+        I have my own matters to attend to.
+        ''')
+    else:
+        print("No such options. Choose it from the options list.")
+        print("Press 'Enter' to continue")
+        input('> ')
 
 
 def show_rules():
@@ -135,6 +159,7 @@ def main_menu():
     if choise == '1':
         player = initialize_game()
         start_new_game(player)
+        cave_actions(player)
     elif choise == '2':
         pass
     elif choise == '3':
