@@ -98,7 +98,7 @@ def initialize_game():
 
 def start_new_game(player):
     """
-    Function for game intoduction
+    Function for game introduction
     """
     show_stats(player)
     print('You wake up in a dimly lit cave, the flickering light of a campfire casting shadows on the walls.')
@@ -112,28 +112,36 @@ def start_new_game(player):
     ''')
     continue_input()
     show_stats(player)
-    print(f'''Stranger:
+    while True:
+        print(f'''Stranger:
         This will help you recover
         *He offers you a mysterious potion*
-        Will you drink it? (Type Y (yes) or N (no))
+        *Will you drink it? (Type Y (yes) or N (no))*
     ''')
-    drink_potion = input('# ').lower()
-    if drink_potion == 'y':
-        player.hp = player.max_hp
-        show_stats(player)
-        print(f'Your health now is {player.hp}/{player.max_hp}HP\n')
-        print('''Stranger:
-        Good. Now you are ready to go.
-        One more thing. If you want to get more potions like this, just find the merchant in the village
-        ''')
-        continue_input()
-    elif drink_potion == 'n':
-        show_stats(player)
-        print('''Stranger:
-        As you say so...
-        By the way, if you are interested in survive, you have to find the merchant in the village
-        ''')
-        continue_input()
+        drink_potion = input('# ').lower()
+        if drink_potion == 'y':
+            player.hp = player.max_hp
+            show_stats(player)
+            print(f'Your health now is {player.hp}/{player.max_hp}HP\n')
+            print('''Stranger:
+            Good. Now you are ready to go.
+            One more thing. If you want to get more potions like this, just find the merchant in the village
+            ''')
+            continue_input()
+            break
+        elif drink_potion == 'n':
+            show_stats(player)
+            print('''Stranger:
+            As you say so...
+            By the way, if you are interested in survive, you have to find the merchant in the village
+            ''')
+            continue_input()
+            break
+        else:
+            show_stats(player)
+            print("No such options. Your answer might be Y or N")
+            continue_input()
+            show_stats(player)
 
 
 def cave_actions(player):
@@ -147,9 +155,12 @@ def cave_actions(player):
     if choise == '1':
         player.location = 'Forest'
         show_stats(player)
+        print('You left the Cave and move to the Forest')
+        continue_input()
     elif choise == '2':
         pass
     elif choise == '3':
+        show_stats(player)
         print('''Stranger:
         Ah, you're still here? Time waits for no one, especially not in these treacherous lands. I suggest you move along.
         I have my own matters to attend to.
@@ -158,7 +169,6 @@ def cave_actions(player):
         cave_actions(player)
     else:
         print("No such options. Choose it from the options list.")
-        print("Press 'Enter' to continue")
         continue_input()
         cave_actions(player)
 
