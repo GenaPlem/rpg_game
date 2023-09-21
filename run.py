@@ -43,11 +43,11 @@ def ascii_art_logo():
     clear()
     print('''
   _____                              _       ______
- |  __ \                            ( )     |  ____|
+ |  __ \\                            ( )     |  ____|
  | |  | |_ __ __ _  __ _  ___  _ __ |/ ___  | |__  _   _  ___
- | |  | | '__/ _` |/ _` |/ _ \| '_ \  / __| |  __|| | | |/ _ \\
- | |__| | | | (_| | (_| | (_) | | | | \__ \ | |___| |_| |  __/
- |_____/|_|  \__,_|\__, |\___/|_| |_| |___/ |______\__, |\___|
+ | |  | | '__/ _` |/ _` |/ _ \\| '_ \\  / __| |  __|| | | |/ _ \\
+ | |__| | | | (_| | (_| | (_) | | | | \\__ \\ | |___| |_| |  __/
+ |_____/|_|  \\__,_|\\__, |\\___/|_| |_| |___/ |______\\__, |\\___|
                     __/ |                           __/ |
                    |___/                           |___/
     ''')
@@ -65,6 +65,8 @@ def continue_input():
     Helper function to continue the game
     """
     input("> Press 'Enter' to continue")
+    # to remove the input text above (works only for Unix-like os)
+    print("\033[A                             \033[A")
 
 
 def show_stats(player):
@@ -72,14 +74,23 @@ def show_stats(player):
     Function to show stats of player
     """
     clear()
-    print('*' * 30)
-    print(f'LOCATION: {player.location}')
-    print(player.username)
-    print(f'HP: {player.hp}/{player.max_hp}')
-    print(f'DMG: {player.attack_dmg}')
-    print(f'Potions: {player.potions}')
-    print(f'Coins: {player.coins}')
-    print('*' * 30 + '\n')
+    max_length = 30
+    print('*' * max_length)
+
+    lines = [
+        f"| LOCATION: {player.location}",
+        f"| {player.username}",
+        f"| HP: {player.hp}/{player.max_hp}",
+        f"| DMG: {player.attack_dmg}",
+        f"| Potions: {player.potions}",
+        f"| Coins: {player.coins}"
+    ]
+
+    for line in lines:
+        padding = max_length - len(line) - 1
+        print(line + ' ' * padding + '|')
+
+    print('*' * max_length + '\n')
 
 
 def initialize_game():
@@ -89,11 +100,11 @@ def initialize_game():
     while True:
         ascii_art_logo()
         username = input('Enter your name Hero! \n')
-        if len(username.strip()) > 1:
+        if 15 >= len(username.strip()) > 1:
             player = Player(username)
             return player
         else:
-            print('Name should be more than 1 symbol')
+            print('Name should be more than 1 symbol and less then 10\n')
             continue_input()
 
 
@@ -140,7 +151,7 @@ def prolog(player):
             break
         else:
             show_stats(player)
-            print("No such options. Your answer might be Y or N")
+            print("No such options. Your answer might be Y or N\n")
             continue_input()
             show_stats(player)
 
@@ -159,7 +170,7 @@ def cave_actions(player):
     if choise == '1':
         player.location = 'Forest'
         show_stats(player)
-        print('You left the Cave and move to the Forest')
+        print('You left the Cave and move to the Forest\n')
         continue_input()
         forest_actions(player)
     elif choise == '2':
@@ -178,20 +189,21 @@ def cave_actions(player):
             cave_actions(player)
         else:
             show_stats(player)
-            print('You are already explored this location!')
+            print('You are already explored this location!\n')
             continue_input()
             cave_actions(player)
 
     elif choise == '3':
         show_stats(player)
         print('''Stranger:
-        Ah, you're still here? Time waits for no one, especially not in these treacherous lands. I suggest you move along.
+        Ah, you're still here?
+        Time waits for no one, especially not in these treacherous lands. I suggest you move along.
         I have my own matters to attend to.
         ''')
         continue_input()
         cave_actions(player)
     else:
-        print("No such options. Choose it from the options list.")
+        print("No such options. Choose it from the options list.\n")
         continue_input()
         cave_actions(player)
 
@@ -205,9 +217,13 @@ def forest_actions(player):
     if choise == '1':
         player.location = 'Cave'
         show_stats(player)
-        print('You are enter the Cave')
+        print('You are enter the Cave\n')
         continue_input()
         cave_actions(player)
+    else:
+        print("No such options. Choose it from the options list.\n")
+        continue_input()
+        forest_actions(player)
 
 
 def show_rules():
@@ -215,11 +231,11 @@ def show_rules():
     Function to show rules of the game
     """
     ascii_art_logo()
-    print("------------------------------------------------")
+    print("-----------------------RULES-------------------------")
     print("1. You will be presented with a list of options at each stage of the game.")
     print("2. To make a choice, simply enter the number corresponding to the option you'd like to choose.")
-    print("3. To go to main menu and save the game at any time, enter '0'.")
-    print("------------------------------------------------")
+    # print("3. To go to main menu and save the game at any time, enter '0'.")
+    print("-----------------------------------------------------")
     continue_input()
     main_menu()
 
@@ -248,7 +264,7 @@ def main_menu():
         print("Bye, hope you will come again!!")
         quit()
     else:
-        print('No such options! Please select number from menu options. Press "Enter" to continue')
+        print('No such options! Please select number from menu options. Press "Enter" to continue\n')
         continue_input()
         main_menu()
 
