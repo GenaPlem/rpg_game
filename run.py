@@ -24,15 +24,7 @@ def clear():
     os.system('clear')
 
 
-def initialize_game():
-    clear()
-    username = input('Enter your Name! ')
-    new_user = Player(username)
-    print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
-
-
-def show_rules():
-    clear()
+def ascii_art():
     print('''
   _____                              _       ______
  |  __ \                            ( )     |  ____|
@@ -43,10 +35,24 @@ def show_rules():
                     __/ |                           __/ |
                    |___/                           |___/
     ''')
+
+
+def initialize_game():
+    clear()
+    ascii_art()
+    username = input('Enter your Name! ')
+    new_user = Player(username)
+    return new_user
+    # print(f" Hey, {new_user.username}. You finally awake! Hope you're fine.")
+
+
+def show_rules():
+    clear()
+    ascii_art()
     print("------------------------------------------------")
     print("1. You will be presented with a list of options at each stage of the game.")
     print("2. To make a choice, simply enter the number corresponding to the option you'd like to choose.")
-    print("3. To access the main menu at any time, enter '0' or 'P'.")
+    print("3. To go to main menu and save the game at any time, enter '0'.")
     print("------------------------------------------------")
     print("Press 'Enter' to return to the main menu.")
     input('> ')
@@ -55,16 +61,7 @@ def show_rules():
 
 def main_menu():
     clear()
-    print('''
-  _____                              _       ______
- |  __ \                            ( )     |  ____|
- | |  | |_ __ __ _  __ _  ___  _ __ |/ ___  | |__  _   _  ___
- | |  | | '__/ _` |/ _` |/ _ \| '_ \  / __| |  __|| | | |/ _ \\
- | |__| | | | (_| | (_| | (_) | | | | \__ \ | |___| |_| |  __/
- |_____/|_|  \__,_|\__, |\___/|_| |_| |___/ |______\__, |\___|
-                    __/ |                           __/ |
-                   |___/                           |___/
-    ''')
+    ascii_art()
     print("1. New Game")
     print("2. Load Game")
     print("3. Rules")
@@ -79,9 +76,11 @@ def main_menu():
     elif choise == '3':
         show_rules()
     elif choise == '4':
+        print("Bye, hope you will come again!!")
         quit()
     else:
-        print('No such options! Please select number from menu options')
+        print('No such options! Please select number from menu options. Press "Enter" to continue')
+        input('> ')
         main_menu()
 
 
