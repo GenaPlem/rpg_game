@@ -3,6 +3,9 @@ import shutil
 
 
 class Player:
+    """
+    Class for player
+    """
     def __init__(self, username):
         self.username = username
         self.attack_dmg = 10
@@ -14,6 +17,9 @@ class Player:
 
 
 class Enemy:
+    """
+    Class for enemy
+    """
     def __init__(self, name):
         self.name = name
         self.attack_dmg = 5
@@ -22,10 +28,16 @@ class Enemy:
 
 
 def clear():
+    """
+    Function to clear the terminal
+    """
     os.system('clear')
 
 
-def ascii_art():
+def ascii_art_logo():
+    """
+    Function to print ascii art logo
+    """
     print('''
   _____                              _       ______
  |  __ \                            ( )     |  ____|
@@ -39,12 +51,18 @@ def ascii_art():
 
 
 def text_align_center(text):
+    """
+    Function to centralize text
+    """
     print(text.center(shutil.get_terminal_size()[0]))
 
 
 def initialize_game():
+    """
+    Function to initialize the game after creating a new player
+    """
     clear()
-    ascii_art()
+    ascii_art_logo()
     username = input('Enter your Name! ')
     new_user = Player(username)
     return new_user
@@ -52,8 +70,11 @@ def initialize_game():
 
 
 def show_rules():
+    """
+    Function to show rules of the game
+    """
     clear()
-    ascii_art()
+    ascii_art_logo()
     print("------------------------------------------------")
     print("1. You will be presented with a list of options at each stage of the game.")
     print("2. To make a choice, simply enter the number corresponding to the option you'd like to choose.")
@@ -65,8 +86,11 @@ def show_rules():
 
 
 def main_menu():
+    """
+    Function to show main menu
+    """
     clear()
-    ascii_art()
+    ascii_art_logo()
     text_align_center("1. New Game")
     text_align_center("2. Load Game")
     text_align_center("3. Rules")
