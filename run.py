@@ -188,7 +188,6 @@ def prolog(player):
             continue_input()
             break
         else:
-            show_stats(player)
             invalid_answer('yes_no')
             show_stats(player)
 
@@ -259,11 +258,15 @@ def battle(player, enemy):
 
 def use_potion(player):
     if player.potions > 0:
-        player.potions -= 1
-        heal_amount = 30
-        player.hp = min(player.max_hp, player.hp + heal_amount)
-        print(f"You used a health potion and restored {heal_amount} HP.")
-        continue_input()
+        if player.hp != player.max_hp:
+            player.potions -= 1
+            heal_amount = 30
+            player.hp = min(player.max_hp, player.hp + heal_amount)
+            print(f"You used a health potion and restored {heal_amount} HP.")
+            continue_input()
+        else:
+            print('You already have full HP!!')
+            continue_input()
     else:
         print("You don't have any health potions.")
         continue_input()
