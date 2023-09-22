@@ -208,6 +208,18 @@ def battle(player, enemy):
             continue_input()
 
 
+def game_over():
+    print('GAME OVER!')
+    continue_input()
+    print('1. Go to main menu')
+    print('2. Quit the game')
+    choise = input('# ')
+    if choise == '1':
+        main_menu()
+    elif choise == '2':
+        exit()
+
+
 def cave_actions(player):
     """
     Function with actions for Cave location
@@ -282,11 +294,9 @@ def forest_actions(player):
             continue_input()
             forest_actions(player)
         else:
-            print('GAME OVER!')
-            continue_input()
-            print('1. Go to main menu')
-            print('2. Quit the game')
-            choise = input('# ')
+            show_stats(player)
+            battle_stats(enemy_wolf)
+            game_over()
 
     else:
         show_stats(player)
