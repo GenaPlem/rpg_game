@@ -94,6 +94,19 @@ def show_stats(player):
     print('*' * max_length + '\n')
 
 
+def battle_stats(enemy):
+
+    enemy_stats = f'| {enemy.name} | {enemy.hp}/{enemy.max_hp}HP | {enemy.attack_dmg} ATK DMG |\n'
+
+    max_length = len(enemy_stats) - 1
+    num_symbols = max_length - len('Battle') - 2
+
+    title = '|' + '=' * num_symbols + ' Battle ' + '=' * num_symbols + '|'
+
+    text_align_center(title)
+    text_align_center(enemy_stats)
+
+
 def initialize_game():
     """
     Function to initialize the game after creating a new player
@@ -161,15 +174,38 @@ def battle(player, enemy):
     """
     Function the start the battle between player and enemy
     """
-    show_stats(player)
-    ''
-    text_align_center('|' + '-' * 10 + 'Battle starts' + '-' * 10 + '|')
-    text_align_center(f'| {enemy.name} | {enemy.hp}/{enemy.max_hp}HP | {enemy.attack_dmg} ATK DMG |\n')
-    print(f'1. Attack the {enemy.name}')
-    print('2. Block')
-    print('3. Try to run away')
-    choise = input('# ')
-    continue_input()
+    while True:
+        show_stats(player)
+        battle_stats(enemy)
+        print(f'1. Attack the {enemy.name}')
+        print('2. Block')
+        print('3. Try to run away')
+
+        choise = input('# ')
+
+        if choise == '1':
+            enemy.hp -= player.attack_dmg
+            if enemy.hp > 0:
+                print(f'You hit {enemy.name} for {player.attack_dmg} damage')
+                continue_input()
+                print(f'{enemy.name} hits you back dealing {enemy.attack_dmg} DMG')
+                player.hp -= enemy.attack_dmg
+                continue_input()
+                if player.hp > 0:
+                    show_stats(player)
+                    battle_stats(enemy)
+                else:
+                    return False
+            else:
+                show_stats(player)
+                battle_stats(enemy)
+                print(f'You hit {enemy.name} for {player.attack_dmg} damage')
+                continue_input()
+                print('Exellent. You win!')
+                return True
+        else:
+            print('No such option.')
+            continue_input()
 
 
 def cave_actions(player):
@@ -242,7 +278,16 @@ def forest_actions(player):
         print('You quickly draw your sword, realizing that the forest is not as welcoming as it seemed.')
         print("It's you or the Wolf now, and the fight for survival begins.\n")
         continue_input()
-        battle(player, enemy_wolf)
+        if battle(player, enemy_wolf):
+            continue_input()
+            forest_actions(player)
+        else:
+            print('GAME OVER!')
+            continue_input()
+            print('1. Go to main menu')
+            print('2. Quit the game')
+            choise = input('# ')
+
     else:
         show_stats(player)
         print('1. Enter the Cave')
