@@ -234,8 +234,12 @@ def battle(player, enemy):
             player.hp = max(0, player.hp + blocked_dmg - enemy.attack_dmg)
             print(f"Fortunately, you manage to block {blocked_dmg} damage.")
             continue_input()
-            print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg - blocked_dmg} damage.')
-            continue_input()
+            if blocked_dmg != enemy.attack_dmg:
+                print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg - blocked_dmg} damage.')
+                continue_input()
+            else:
+                print(f"You successfully parried the enemy's attack, taking no damage.")
+                continue_input()
             # Add random chance to counter-attack the enemy
             if random.randint(1, 100) <= 30:
                 print(f"Your counter-attack is successful, dealing {player.attack_dmg} damage to {enemy.name}.")
