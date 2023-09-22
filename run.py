@@ -16,6 +16,7 @@ class Player:
         self.location = 'Cave'
         self.inventory = []
         self.explored_locations = []
+        self.visited_locations = []
 
 
 class Enemy:
@@ -110,7 +111,7 @@ def initialize_game():
 
 def prolog(player):
     """
-    Function for game introduction
+    Function for game prolog
     """
     show_stats(player)
     print('You wake up in a dimly lit cave, the flickering light of a campfire casting shadows on the walls.')
@@ -170,7 +171,7 @@ def cave_actions(player):
     if choise == '1':
         player.location = 'Forest'
         show_stats(player)
-        print('You left the Cave and move to the Forest\n')
+        print('You left the Cave and now you are in the Forest\n')
         continue_input()
         forest_actions(player)
     elif choise == '2':
@@ -209,21 +210,36 @@ def cave_actions(player):
 
 
 def forest_actions(player):
-    show_stats(player)
-    print('1. Enter the Cave')
-
-    choise = input('# ')
-
-    if choise == '1':
-        player.location = 'Cave'
+    """
+    Function with actions in Forest location
+    """
+    if 'Forest' not in player.visited_locations:
+        enemy_wolf = Enemy('Wolf')
         show_stats(player)
-        print('You are enter the Cave\n')
+        print('You was attacked by Wolf')
+        print('*The Wolf bites you, dealing 5 damage!\n')
         continue_input()
-        cave_actions(player)
+        player.hp -= 5
+        show_stats(player)
+        print('You quickly draw your sword, realizing that the forest is not as welcoming as it seemed.')
+        print("It's you or the Wolf now, and the fight for survival begins.\n")
+        continue_input()
     else:
-        print("No such options. Choose it from the options list.\n")
-        continue_input()
-        forest_actions(player)
+        show_stats(player)
+        print('1. Enter the Cave')
+
+        choise = input('# ')
+
+        if choise == '1':
+            player.location = 'Cave'
+            show_stats(player)
+            print('You are enter the Cave\n')
+            continue_input()
+            cave_actions(player)
+        else:
+            print("No such options. Choose it from the options list.\n")
+            continue_input()
+            forest_actions(player)
 
 
 def show_rules():
