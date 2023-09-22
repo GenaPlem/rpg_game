@@ -23,10 +23,10 @@ class Enemy:
     """
     Class for enemy
     """
-    def __init__(self, name):
+    def __init__(self, name, attack_dmg, max_hp):
         self.name = name
-        self.attack_dmg = 5
-        self.max_hp = 50
+        self.attack_dmg = attack_dmg
+        self.max_hp = max_hp
         self.hp = self.max_hp
 
 
@@ -157,6 +157,21 @@ def prolog(player):
             show_stats(player)
 
 
+def battle(player, enemy):
+    """
+    Function the start the battle between player and enemy
+    """
+    show_stats(player)
+    ''
+    text_align_center('|' + '-' * 10 + 'Battle starts' + '-' * 10 + '|')
+    text_align_center(f'| {enemy.name} | {enemy.hp}/{enemy.max_hp}HP | {enemy.attack_dmg} ATK DMG |\n')
+    print(f'1. Attack the {enemy.name}')
+    print('2. Block')
+    print('3. Try to run away')
+    choise = input('# ')
+    continue_input()
+
+
 def cave_actions(player):
     """
     Function with actions for Cave location
@@ -214,8 +229,11 @@ def forest_actions(player):
     Function with actions in Forest location
     """
     if 'Forest' not in player.visited_locations:
-        enemy_wolf = Enemy('Wolf')
+        enemy_wolf = Enemy('Wolf', 5, 40)
         show_stats(player)
+        print('As you step out of the cave, you feel the fresh air and sun on your face.')
+        print('Suddenly, a low growl comes from the bushes. A ferocious wolf lunges at you.\n')
+        continue_input()
         print('You was attacked by Wolf')
         print('*The Wolf bites you, dealing 5 damage!\n')
         continue_input()
@@ -224,6 +242,7 @@ def forest_actions(player):
         print('You quickly draw your sword, realizing that the forest is not as welcoming as it seemed.')
         print("It's you or the Wolf now, and the fight for survival begins.\n")
         continue_input()
+        battle(player, enemy_wolf)
     else:
         show_stats(player)
         print('1. Enter the Cave')
