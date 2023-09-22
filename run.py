@@ -57,7 +57,7 @@ def ascii_art_logo():
 
 def text_align_center(text):
     """
-    Function to centralize text
+    Helper function to centralize text
     """
     print(text.center(shutil.get_terminal_size()[0]))
 
@@ -69,6 +69,21 @@ def continue_input():
     input("> Press 'Enter' to continue")
     # to remove the input text above (works only for Unix-like os)
     print("\033[A                             \033[A")
+
+
+def invalid_answer(validation_type):
+    """
+    Helper function to show error message
+    """
+    if validation_type == 'username':
+        print('Name should be more than 1 symbol and less then 10\n')
+    elif validation_type == 'yes_no':
+        print("No such options. Your answer might be Y or N\n")
+    elif validation_type == 'options':
+        print("No such options. Choose it from the options list.\n")
+    else:
+        print('Something went wrong!')
+    continue_input()
 
 
 def show_stats(player):
@@ -96,7 +111,9 @@ def show_stats(player):
 
 
 def battle_stats(enemy):
-
+    """
+    Function to show battle stats
+    """
     enemy_stats = f'| {enemy.name.upper()} | {enemy.hp}/{enemy.max_hp} HP | {enemy.attack_dmg} DMG |\n'
 
     max_length = len(enemy_stats) - 1
@@ -119,8 +136,7 @@ def initialize_game():
             player = Player(username)
             return player
         else:
-            print('Name should be more than 1 symbol and less then 10\n')
-            continue_input()
+            invalid_answer('username')
 
 
 def prolog(player):
@@ -166,8 +182,7 @@ def prolog(player):
             break
         else:
             show_stats(player)
-            print("No such options. Your answer might be Y or N\n")
-            continue_input()
+            invalid_answer('yes_no')
             show_stats(player)
 
 
@@ -206,8 +221,7 @@ def battle(player, enemy):
                 continue_input()
                 return True
         else:
-            print('No such option.')
-            continue_input()
+            invalid_answer('options')
 
 
 def game_over():
@@ -223,6 +237,8 @@ def game_over():
         main_menu()
     elif choise == '2':
         exit_game()
+    else:
+        invalid_answer('options')
 
 
 def cave_actions(player):
@@ -272,8 +288,7 @@ def cave_actions(player):
         continue_input()
         cave_actions(player)
     else:
-        print("No such options. Choose it from the options list.\n")
-        continue_input()
+        invalid_answer('options')
         cave_actions(player)
 
 
@@ -301,7 +316,7 @@ def forest_actions(player):
             coins_found = random.randint(5, 20)
             player.coins += coins_found
 
-            print(f"You have defeated the enemy! After searching, you found {coins_found} coins.")
+            print(f"After searching, you found {coins_found} coins.")
 
             continue_input()
             forest_actions(player)
@@ -324,8 +339,7 @@ def forest_actions(player):
             continue_input()
             cave_actions(player)
         else:
-            print("No such options. Choose it from the options list.\n")
-            continue_input()
+            invalid_answer('options')
             forest_actions(player)
 
 
