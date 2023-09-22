@@ -194,7 +194,7 @@ def battle(player, enemy):
         show_stats(player)
         battle_stats(enemy)
         print(f'1. Strike the {enemy.name}')
-        print('2. Defend')
+        print('2. Defend and Counter-Attack')
         # print('3. Try to run away')
 
         choise = input('# ')
@@ -204,7 +204,7 @@ def battle(player, enemy):
             if enemy.hp > 0:
                 print(f'You strike {enemy.name}, dealing {player.attack_dmg} damage.')
                 continue_input()
-                print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg} damage.')
+                print(f"{enemy.name} strikes back, dealing {enemy.attack_dmg} points of damage to you.")
                 player.hp = max(0, player.hp - enemy.attack_dmg)
                 continue_input()
                 if player.hp > 0:
@@ -220,6 +220,30 @@ def battle(player, enemy):
                 print(f'You vanquish {enemy.name}, emerging victorious!')
                 continue_input()
                 return True
+        elif choise == '2':
+            # Add random chance to block damage from 1 to enemy damage
+            print(f"You attempt to block the incoming attack from {enemy.name}.")
+            continue_input()
+            blocked_dmg = random.randint(1, enemy.attack_dmg)
+            player.hp = max(0, player.hp + blocked_dmg - enemy.attack_dmg)
+            print(f"Fortunately, you manage to block {blocked_dmg} damage.")
+            continue_input()
+            print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg - blocked_dmg} damage.')
+            continue_input()
+            # Add random chance to counter-attack the enemy
+            if random.randint(1, 100) <= 30:
+                print(f"Your counter-attack is successful, dealing {player.attack_dmg} damage to {enemy.name}.")
+                enemy.hp = max(0, enemy.hp - player.attack_dmg)
+                continue_input()
+                if enemy.hp <= 0:
+                    print(f'You vanquish {enemy.name}, emerging victorious!')
+                    continue_input()
+                    return True
+            else:
+                print("You attempt a counter-attack, but it fails to land.")
+                continue_input()
+            if player.hp <= 0:
+                return False
         else:
             invalid_answer('options')
 
