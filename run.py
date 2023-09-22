@@ -217,7 +217,7 @@ def game_over():
     if choise == '1':
         main_menu()
     elif choise == '2':
-        exit()
+        exit_game()
 
 
 def cave_actions(player):
@@ -330,6 +330,11 @@ def show_rules():
     main_menu()
 
 
+def exit_game():
+    print("Bye, hope you will come again!!")
+    quit()
+
+
 def main_menu():
     """
     Function to show main menu
@@ -351,8 +356,7 @@ def main_menu():
     elif choise == '3':
         show_rules()
     elif choise == '4':
-        print("Bye, hope you will come again!!")
-        quit()
+        exit_game()
     else:
         print('No such options! Please select number from menu options. Press "Enter" to continue\n')
         continue_input()
