@@ -406,7 +406,14 @@ def exit_game():
     """
     Function to exit the game
     """
-    print("Bye, hope you will come again!!")
+    ascii_art_logo()
+    text_align_center("===================================")
+    text_align_center("|         FAREWELL, HERO          |")
+    text_align_center("===================================")
+    print("\nAs you step away from the world of adventure, the echoes of your deeds fade into legend.")
+    print("May your path be clear, your sword sharp, and your courage unyielding.")
+    print("Until we meet again, safe travels!\n")
+    print("Goodbye, and thank you for playing!")
     quit()
 
 
