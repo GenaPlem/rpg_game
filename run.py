@@ -1,5 +1,6 @@
 import os
 import shutil
+import random
 
 
 class Player:
@@ -96,7 +97,7 @@ def show_stats(player):
 
 def battle_stats(enemy):
 
-    enemy_stats = f'| {enemy.name} | {enemy.hp}/{enemy.max_hp}HP | {enemy.attack_dmg} ATK DMG |\n'
+    enemy_stats = f'| {enemy.name.upper()} | {enemy.hp}/{enemy.max_hp} HP | {enemy.attack_dmg} DMG |\n'
 
     max_length = len(enemy_stats) - 1
     num_symbols = max_length - len('Battle') - 2
@@ -179,17 +180,17 @@ def battle(player, enemy):
         battle_stats(enemy)
         print(f'1. Attack the {enemy.name}')
         print('2. Block')
-        print('3. Try to run away')
+        # print('3. Try to run away')
 
         choise = input('# ')
 
         if choise == '1':
-            enemy.hp -= player.attack_dmg
+            enemy.hp = max(0, enemy.hp - player.attack_dmg)
             if enemy.hp > 0:
                 print(f'You hit {enemy.name} for {player.attack_dmg} damage')
                 continue_input()
                 print(f'{enemy.name} hits you back dealing {enemy.attack_dmg} DMG')
-                player.hp -= enemy.attack_dmg
+                player.hp = max(0, player.hp - enemy.attack_dmg)
                 continue_input()
                 if player.hp > 0:
                     show_stats(player)
@@ -201,7 +202,8 @@ def battle(player, enemy):
                 battle_stats(enemy)
                 print(f'You hit {enemy.name} for {player.attack_dmg} damage')
                 continue_input()
-                print('Exellent. You win!')
+                print(f'Victory! You have defeated the {enemy.name} and emerged victorious!')
+                continue_input()
                 return True
         else:
             print('No such option.')
@@ -209,6 +211,9 @@ def battle(player, enemy):
 
 
 def game_over():
+    """
+    Function for game over
+    """
     print('GAME OVER!')
     continue_input()
     print('1. Go to main menu')
@@ -291,8 +296,16 @@ def forest_actions(player):
         print("It's you or the Wolf now, and the fight for survival begins.\n")
         continue_input()
         if battle(player, enemy_wolf):
+            player.visited_locations.append('Forest')
+
+            coins_found = random.randint(5, 20)
+            player.coins += coins_found
+
+            print(f"You have defeated the enemy! After searching, you found {coins_found} coins.")
+
             continue_input()
             forest_actions(player)
+
         else:
             show_stats(player)
             battle_stats(enemy_wolf)
@@ -331,6 +344,9 @@ def show_rules():
 
 
 def exit_game():
+    """
+    Function to exit the game
+    """
     print("Bye, hope you will come again!!")
     quit()
 
