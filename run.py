@@ -145,21 +145,21 @@ def prolog(player):
     """
     show_stats(player)
     print('You wake up in a dimly lit cave, the flickering light of a campfire casting shadows on the walls.')
-    print('A Stranger sits across from you, tending to the fire.\n')
+    print('A mysterious figure sits across, tending the fire.\n\n')
     continue_input()
     show_stats(player)
     print(f'''Stranger:
-        Hey {player.username}, you're finally awake.
-        I heard a dragon's roar and then found you unconscious at the foot of the mountain.
-        You must have been at the summit where, according to legends, a fearsome Dragon resides.
+        Ah, {player.username}, you stir at last.
+        I heard a dragon's cry and found you lying at the mountain's base.
+        You must've ventured to the summit, where the fabled Dragon dwells.
     ''')
     continue_input()
     show_stats(player)
     while True:
         print(f'''Stranger:
-        This will help you recover
-        *He offers you a mysterious potion*
-        *Will you drink it? (Type Y (yes) or N (no))*
+        This elixir will mend your wounds.
+        *He extends a vial of glowing liquid*
+        *Will you accept? (Y/N)*
     ''')
         drink_potion = input('# ').lower()
         if drink_potion == 'y':
@@ -193,8 +193,8 @@ def battle(player, enemy):
     while True:
         show_stats(player)
         battle_stats(enemy)
-        print(f'1. Attack the {enemy.name}')
-        print('2. Block')
+        print(f'1. Strike the {enemy.name}')
+        print('2. Defend')
         # print('3. Try to run away')
 
         choise = input('# ')
@@ -202,9 +202,9 @@ def battle(player, enemy):
         if choise == '1':
             enemy.hp = max(0, enemy.hp - player.attack_dmg)
             if enemy.hp > 0:
-                print(f'You hit {enemy.name} for {player.attack_dmg} damage')
+                print(f'You strike {enemy.name}, dealing {player.attack_dmg} damage.')
                 continue_input()
-                print(f'{enemy.name} hits you back dealing {enemy.attack_dmg} DMG')
+                print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg} damage.')
                 player.hp = max(0, player.hp - enemy.attack_dmg)
                 continue_input()
                 if player.hp > 0:
@@ -215,9 +215,9 @@ def battle(player, enemy):
             else:
                 show_stats(player)
                 battle_stats(enemy)
-                print(f'You hit {enemy.name} for {player.attack_dmg} damage')
+                print(f'You strike {enemy.name}, dealing {player.attack_dmg} damage.')
                 continue_input()
-                print(f'Victory! You have defeated the {enemy.name} and emerged victorious!')
+                print(f'You vanquish {enemy.name}, emerging victorious!')
                 continue_input()
                 return True
         else:
@@ -232,13 +232,15 @@ def game_over():
     continue_input()
     print('1. Go to main menu')
     print('2. Quit the game')
-    choise = input('# ')
-    if choise == '1':
-        main_menu()
-    elif choise == '2':
-        exit_game()
-    else:
-        invalid_answer('options')
+    while True:
+        choise = input('# ')
+        if choise == '1':
+            main_menu()
+            break
+        elif choise == '2':
+            exit_game()
+        else:
+            invalid_answer('options')
 
 
 def cave_actions(player):
@@ -246,27 +248,27 @@ def cave_actions(player):
     Function with actions for Cave location
     """
     show_stats(player)
-    print('1. Leave the Cave')
-    print('2. Explore the Cave')
-    print('3. Talk to Stranger')
+    print('1. Exit the Cave')
+    print('2. Scour the Cave')
+    print('3. Talk to the Stranger')
 
     choise = input('# ')
 
     if choise == '1':
         player.location = 'Forest'
         show_stats(player)
-        print('You left the Cave and now you are in the Forest\n')
+        print('You venture forth into the Forest.\n')
         continue_input()
         forest_actions(player)
     elif choise == '2':
 
         if 'Cave' not in player.explored_locations:
             show_stats(player)
-            print('Exploring the Cave...')
+            print('You decide to delve deeper into the cave...')
             continue_input()
-            print('Well well! You find someting')
-            print("It's a lit bag of money!!")
-            print('*You find 10 coins!*')
+            print('A glint catches your eye.')
+            print("It's a sack of gold coins!")
+            print('*You acquire 10 coins!*')
             continue_input()
             player.coins += 10
             player.explored_locations.append('Cave')
@@ -274,7 +276,7 @@ def cave_actions(player):
             cave_actions(player)
         else:
             show_stats(player)
-            print('You are already explored this location!\n')
+            print('You feel you have uncovered all the cave’s secrets.\n')
             continue_input()
             cave_actions(player)
 
@@ -329,6 +331,8 @@ def forest_actions(player):
     else:
         show_stats(player)
         print('1. Enter the Cave')
+        print('2. Explore the Forest')
+        print('3. Go to the Village')
 
         choise = input('# ')
 
@@ -338,9 +342,45 @@ def forest_actions(player):
             print('You are enter the Cave\n')
             continue_input()
             cave_actions(player)
+        elif choise == '3':
+            player.location = 'Village'
+            show_stats(player)
+            print('You go to the Village\n')
+            continue_input()
+            village_actions(player)
         else:
             invalid_answer('options')
             forest_actions(player)
+
+
+def village_actions(player):
+    if 'Village' not in player.visited_locations:
+        show_stats(player)
+        player.visited_locations.append('Village')
+        print("As you step into the village, you're greeted by the warm smiles of the villagers.")
+        continue_input()
+        print("Children are playing in the streets, and the aroma of freshly baked bread fills the air.")
+        continue_input()
+        print("A sense of community and peace envelops you.")
+        continue_input()
+
+    show_stats(player)
+    print('1. Go to the Forest')
+    print('2. Explore the Village')
+    print('3. Go to the merchant')
+    print('4. Go to the castle')
+
+    choise = input('# ')
+
+    if choise == '1':
+        player.location = 'Forest'
+        show_stats(player)
+        print('You are enter the Forest\n')
+        continue_input()
+        forest_actions(player)
+    else:
+        invalid_answer('options')
+        village_actions(player)
 
 
 def show_rules():
