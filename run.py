@@ -224,15 +224,18 @@ def battle(player, enemy):
             invalid_answer('options')
 
 
-def game_over():
+def game_over(player, enemy):
     """
     Function for game over
     """
-    print('GAME OVER!')
-    continue_input()
-    print('1. Go to main menu')
-    print('2. Quit the game')
     while True:
+        text_align_center("|===================================|")
+        text_align_center("|            GAME OVER              |")
+        text_align_center("|===================================|\n")
+        print(f'Well well.. {player.username}. You were defeated by {enemy.name}. So sad..\n')
+        print('1. Go to main menu')
+        print('2. Quit the game')
+
         choise = input('# ')
         if choise == '1':
             main_menu()
@@ -241,6 +244,8 @@ def game_over():
             exit_game()
         else:
             invalid_answer('options')
+            show_stats(player)
+            battle_stats(enemy)
 
 
 def cave_actions(player):
@@ -326,7 +331,7 @@ def forest_actions(player):
         else:
             show_stats(player)
             battle_stats(enemy_wolf)
-            game_over()
+            game_over(player, enemy_wolf)
 
     else:
         show_stats(player)
@@ -421,8 +426,8 @@ def main_menu():
         player = initialize_game()
         prolog(player)
         cave_actions(player)
-    elif choise == '2':
-        pass
+    # elif choise == '2':
+    #     pass
     elif choise == '3':
         show_rules()
     elif choise == '4':
