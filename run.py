@@ -13,7 +13,7 @@ class Player:
         self.hp = 20
         self.max_hp = 50
         self.coins = 0
-        self.potions = 0
+        self.potions = 1
         self.location = 'Cave'
         self.inventory = []
         self.explored_locations = []
@@ -202,7 +202,7 @@ def battle(player, enemy):
         battle_stats(enemy)
         print(f'1. Strike the {enemy.name}')
         print('2. Defend and Counter-Attack')
-        # print('3. Try to run away')
+        print('3. Use Health Potion')
 
         choise = input('# ')
 
@@ -251,8 +251,22 @@ def battle(player, enemy):
                 continue_input()
             if player.hp <= 0:
                 return False
+        elif choise == '3':
+            use_potion(player)
         else:
             invalid_answer('options')
+
+
+def use_potion(player):
+    if player.potions > 0:
+        player.potions -= 1
+        heal_amount = 30
+        player.hp = min(player.max_hp, player.hp + heal_amount)
+        print(f"You used a health potion and restored {heal_amount} HP.")
+        continue_input()
+    else:
+        print("You don't have any health potions.")
+        continue_input()
 
 
 def game_over(player, enemy):
@@ -287,6 +301,7 @@ def cave_actions(player):
     print('1. Exit the Cave')
     print('2. Scour the Cave')
     print('3. Talk to the Stranger')
+    print('4. Use Health Potion')
 
     choise = input('# ')
 
@@ -324,6 +339,9 @@ def cave_actions(player):
         I have my own matters to attend to.
         ''')
         continue_input()
+        cave_actions(player)
+    elif choise == '4':
+        use_potion(player)
         cave_actions(player)
     else:
         invalid_answer('options')
@@ -369,6 +387,7 @@ def forest_actions(player):
         print('1. Enter the Cave')
         print('2. Explore the Forest')
         print('3. Go to the Village')
+        print('4. Use Health Potion')
 
         choise = input('# ')
 
@@ -384,6 +403,9 @@ def forest_actions(player):
             print('You go to the Village\n')
             continue_input()
             village_actions(player)
+        elif choise == '4':
+            use_potion(player)
+            forest_actions(player)
         else:
             invalid_answer('options')
             forest_actions(player)
@@ -405,6 +427,7 @@ def village_actions(player):
     print('2. Explore the Village')
     print('3. Go to the merchant')
     print('4. Go to the castle')
+    print('5. Use Health Potion')
 
     choise = input('# ')
 
@@ -414,6 +437,9 @@ def village_actions(player):
         print('You are enter the Forest\n')
         continue_input()
         forest_actions(player)
+    elif choise == '5':
+        use_potion(player)
+        village_actions(player)
     else:
         invalid_answer('options')
         village_actions(player)
