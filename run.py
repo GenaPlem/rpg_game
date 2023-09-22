@@ -416,12 +416,22 @@ def show_rules():
     """
     Function to show rules of the game
     """
+    terminal_width = shutil.get_terminal_size()[0]
+    word = "RULES"
+
+    num_dashes = terminal_width - len(word) - 2  # 2 for the spaces around word "RULES"
+    dashes = num_dashes // 2
+    remaining_dashes = num_dashes % 2  # In case the terminal width is odd
+    rules_title = '-' * dashes + ' ' + word + ' ' + '-' * (dashes + remaining_dashes)
+    
     ascii_art_logo()
-    print("-----------------------RULES-------------------------")
+    text_align_center(rules_title)
     print("1. You will be presented with a list of options at each stage of the game.")
     print("2. To make a choice, simply enter the number corresponding to the option you'd like to choose.")
-    # print("3. To go to main menu and save the game at any time, enter '0'.")
-    print("-----------------------------------------------------")
+    print("3. In battles, you can either attack or defend:")
+    print("   - Attacking will deal damage to the enemy.")
+    print("   - Defending will block some incoming damage and has a 30% chance to counter-attack.")
+    text_align_center('-' * terminal_width)
     continue_input()
     main_menu()
 
