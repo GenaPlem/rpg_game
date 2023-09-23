@@ -96,7 +96,7 @@ class ForestWanderer(Enemy):
         self.is_alive = True
 
     def special_attack(self, player):
-        special_dmg = self.attack_dmg * 1.5
+        special_dmg = int(self.attack_dmg * 1.5)
         print(f"{self.name} focuses its dark energy and unleashes a Shadow Strike, dealing {special_dmg} damage!")
         player.hp -= special_dmg
         continue_input()
@@ -246,9 +246,12 @@ def initialize_game():
 
         username = input('Enter your name Hero! \n')
 
-        if 15 >= len(username.strip()) > 1:
+        if 15 >= len(username.strip()) > 1 and username.isalpha():
             player = Player(username)
             return player
+        elif not username.isalpha():
+            print("Your name cannot contain numbers or special characters.\n")
+            continue_input()
         else:
             invalid_answer('username')
 
@@ -271,7 +274,19 @@ def battle(player, enemy):
             player.attack(enemy)
 
             if enemy.hp > 0:
-                enemy.attack(player)
+                # If enemy have a special attack then he will use it with 15% chance
+                if hasattr(enemy, 'special_attack') and random.randint(1, 100) <= 25:
+                    enemy.special_attack(player)
+
+                    if player.hp > 0:
+                        show_stats(player)
+                        battle_stats(enemy)
+
+                    else:
+                        return False
+
+                else:
+                    enemy.attack(player)
 
                 if player.hp > 0:
                     show_stats(player)
@@ -497,7 +512,7 @@ def forest_actions(player):
             coins_found = random.randint(5, 20)
             player.coins += coins_found
 
-            print(f"After searching, you found {coins_found} coins.")
+            print(f"After searching, you found {coins_found} coins.\n")
 
             continue_input()
             forest_actions(player)
@@ -566,6 +581,8 @@ def explore_forest(player):
             forest_actions(player)
 
         else:
+            show_stats(player)
+            battle_stats(forest_wanderer)
             game_over(player, forest_wanderer)
 
     else:
@@ -588,7 +605,7 @@ def village_actions(player):
         print("Children are playing in the streets, and the aroma of freshly baked bread fills the air.")
         continue_input()
 
-        print("A sense of community and peace envelops you.")
+        print("A sense of community and peace envelops you.\n")
         continue_input()
 
     show_stats(player)
