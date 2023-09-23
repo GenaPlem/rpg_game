@@ -20,6 +20,57 @@ class Player:
         self.visited_locations = []
         self.forest_quest = False
 
+    def attack(self, enemy):
+        enemy.hp = max(0, enemy.hp - self.attack_dmg)
+        print(f'You strike {enemy.name}, dealing {self.attack_dmg} damage.')
+        continue_input()
+
+    def block(self, enemy):
+        print(f"You attempt to block the incoming attack from {enemy.name}.")
+        continue_input()
+
+        # Add random chance to block damage from 1 to enemy damage
+        blocked_dmg = random.randint(1, enemy.attack_dmg)
+        self.hp = max(0, self.hp + blocked_dmg - enemy.attack_dmg)
+
+        print(f"Fortunately, you manage to block {blocked_dmg} damage.")
+        continue_input()
+
+        if blocked_dmg != enemy.attack_dmg:
+            print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg - blocked_dmg} damage.')
+            continue_input()
+
+        else:
+            print(f"You successfully parried the enemy's attack, taking no damage.")
+            continue_input()
+
+            # Add random chance to counter-attack the enemy
+        if random.randint(1, 100) <= 30:
+            print(f"Your counter-attack is successful, dealing {self.attack_dmg} damage to {enemy.name}.")
+
+            enemy.hp = max(0, enemy.hp - self.attack_dmg)
+            continue_input()
+
+            if enemy.hp <= 0:
+                show_stats(self)
+                battle_stats(enemy)
+                print(f'You vanquish {enemy.name}, emerging victorious!')
+                continue_input()
+
+                return True
+
+        else:
+            print("You attempt a counter-attack, but it fails to land.")
+            continue_input()
+
+    def win(self, enemy):
+        show_stats(self)
+        battle_stats(enemy)
+        # print(f'You strike {enemy.name}, dealing {self.attack_dmg} damage.')
+        # continue_input()
+        print(f'You vanquish {enemy.name}, emerging victorious!')
+        continue_input()
+
 
 class Enemy:
     """
@@ -30,6 +81,32 @@ class Enemy:
         self.attack_dmg = attack_dmg
         self.max_hp = max_hp
         self.hp = self.max_hp
+
+    def attack(self, player):
+        player.hp = max(0, player.hp - self.attack_dmg)
+        print(f"{self.name} strikes back, dealing {self.attack_dmg} points of damage to you.")
+        continue_input()
+
+
+class ForestWanderer(Enemy):
+    def __init__(self):
+        # Calculate enemy stats based on player stats
+        super().__init__(name="Forest Wanderer", attack_dmg=12, max_hp=50)
+
+        self.description = "A mysterious creature with dark fur and unsettling yellow eyes."
+        self.reward = 50
+        self.is_alive = True
+
+    def special_attack(self, player):
+        special_dmg = self.attack_dmg * 1.5
+        print(f"{self.name} focuses its dark energy and unleashes a Shadow Strike, dealing {special_dmg} damage!")
+        player.hp -= special_dmg
+        continue_input()
+
+    def death_cry(self):
+        print("As the Forest Wanderer falls, you feel as if a weight has been lifted from the forest.")
+        self.is_alive = False
+        continue_input()
 
 
 class Quest:
@@ -169,109 +246,6 @@ def initialize_game():
             invalid_answer('username')
 
 
-def explore_cave(player):
-    if 'Cave' not in player.explored_locations:
-        show_stats(player)
-        print('You decide to delve deeper into the Cave...')
-        continue_input()
-
-        print('A glint catches your eye.')
-        print("It's a sack of gold coins!")
-        print('*You acquire 10 coins!*')
-        continue_input()
-
-        player.coins += 10
-        player.explored_locations.append('Cave')
-
-        show_stats(player)
-        cave_actions(player)
-
-    else:
-        show_stats(player)
-        print("You've uncovered all the Cave's secrets.\n")
-        continue_input()
-        cave_actions(player)
-
-
-def explore_forest(player):
-    """
-    Function to explore the Forest
-    """
-    if player.forest_quest:
-        print("You venture deeper into the Forest, the air growing thicker and the trees towering above.")
-        continue_input()
-        print('')
-
-    else:
-        print("You wander around the Forest for a while but find nothing more than small critters.")
-        continue_input()
-        forest_actions(player)
-
-
-def talk_to_villager(player):
-    """
-    Function to talk to the villager and get a quest
-    """
-    forest_quest = Quest("Explore the Deep Forest",
-                         "Venture into the depths of the Forest and find the lost amulet.",
-                         50)
-
-    show_stats(player)
-    if not player.forest_quest:
-        print(f"Villager: Ah, {player.username}, you look like someone who could help us.")
-        print("I've lost a precious amulet in the Deep Forest. It's been in my family for generations.")
-        print("I would go myself, but the forest is too dangerous and filled with creatures.")
-        print("Would you be willing to help me retrieve it? The reward will be generous.\n")
-
-        print(f"Quest: {forest_quest.name}")
-        print(f"Description: {forest_quest.description}\n")
-        print("Do you accept? (Y/N)")
-
-        choice = input('# ').lower()
-        if choice == 'y':
-            show_stats(player)
-            print("Villager: Excellent! Good luck!")
-            continue_input()
-            player.forest_quest = True
-
-        elif choice == 'n':
-            show_stats(player)
-            print("Villager: Oh, that's too bad. Maybe some other time then.")
-            continue_input()
-
-        else:
-            invalid_answer('yes_no')
-            talk_to_villager(player)
-    else:
-        print(f"Villager: Ah, {player.username}, have you found my amulet yet? (Y/N)")
-        choise = input('# ').lower()
-        if choise == 'y':
-            if "villagers_amulet" in player.inventory:
-                show_stats(player)
-                print("Villager: Ah, you've found my amulet! Thank you so much!")
-                print("As promised, here is your reward.")
-                print(f"Villager hands you a pouch of coins. +{forest_quest.reward} coins")
-                player.coins += forest_quest.reward
-                player.inventory.remove("villagers_amulet")
-                continue_input()
-                forest_quest.is_completed = True
-                village_actions(player)
-            else:
-                show_stats(player)
-                print('Villager: Deception? In my village? You best not be lying.')
-                print('*You feel a sense of shame*')
-                continue_input()
-                village_actions(player)
-
-        elif choise == 'n':
-            show_stats(player)
-            print("Villager: I see. Please hurry, it means a lot to me.")
-            continue_input()
-        else:
-            invalid_answer('yes_no')
-            talk_to_villager(player)
-
-
 def battle(player, enemy):
     """
     Starts the battle between player and enemy
@@ -287,15 +261,10 @@ def battle(player, enemy):
         choice = input('# ')
 
         if choice == '1':
-            enemy.hp = max(0, enemy.hp - player.attack_dmg)
+            player.attack(enemy)
 
             if enemy.hp > 0:
-                print(f'You strike {enemy.name}, dealing {player.attack_dmg} damage.')
-                continue_input()
-                print(f"{enemy.name} strikes back, dealing {enemy.attack_dmg} points of damage to you.")
-
-                player.hp = max(0, player.hp - enemy.attack_dmg)
-                continue_input()
+                enemy.attack(player)
 
                 if player.hp > 0:
                     show_stats(player)
@@ -305,51 +274,14 @@ def battle(player, enemy):
                     return False
 
             else:
-                show_stats(player)
-                battle_stats(enemy)
-                print(f'You strike {enemy.name}, dealing {player.attack_dmg} damage.')
-                continue_input()
-                print(f'You vanquish {enemy.name}, emerging victorious!')
-                continue_input()
-
+                player.win(enemy)
                 return True
 
         elif choice == '2':
-            print(f"You attempt to block the incoming attack from {enemy.name}.")
-            continue_input()
-            # Add random chance to block damage from 1 to enemy damage
-            blocked_dmg = random.randint(1, enemy.attack_dmg)
-            player.hp = max(0, player.hp + blocked_dmg - enemy.attack_dmg)
+            player.block(enemy)
 
-            print(f"Fortunately, you manage to block {blocked_dmg} damage.")
-            continue_input()
-
-            if blocked_dmg != enemy.attack_dmg:
-                print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg - blocked_dmg} damage.')
-                continue_input()
-
-            else:
-                print(f"You successfully parried the enemy's attack, taking no damage.")
-                continue_input()
-
-            # Add random chance to counter-attack the enemy
-            if random.randint(1, 100) <= 30:
-                print(f"Your counter-attack is successful, dealing {player.attack_dmg} damage to {enemy.name}.")
-
-                enemy.hp = max(0, enemy.hp - player.attack_dmg)
-                continue_input()
-
-                if enemy.hp <= 0:
-                    show_stats(player)
-                    battle_stats(enemy)
-                    print(f'You vanquish {enemy.name}, emerging victorious!')
-                    continue_input()
-
-                    return True
-
-            else:
-                print("You attempt a counter-attack, but it fails to land.")
-                continue_input()
+            if enemy.hp <= 0:
+                return True
 
             if player.hp <= 0:
                 return False
@@ -505,6 +437,30 @@ def cave_actions(player):
         cave_actions(player)
 
 
+def explore_cave(player):
+    if 'Cave' not in player.explored_locations:
+        show_stats(player)
+        print('You decide to delve deeper into the Cave...')
+        continue_input()
+
+        print('A glint catches your eye.')
+        print("It's a sack of gold coins!")
+        print('*You acquire 10 coins!*')
+        continue_input()
+
+        player.coins += 10
+        player.explored_locations.append('Cave')
+
+        show_stats(player)
+        cave_actions(player)
+
+    else:
+        show_stats(player)
+        print("You've uncovered all the Cave's secrets.\n")
+        continue_input()
+        cave_actions(player)
+
+
 def forest_actions(player):
     """
     Displays actions in Forest location
@@ -581,6 +537,111 @@ def forest_actions(player):
         else:
             invalid_answer('options')
             forest_actions(player)
+
+
+forest_wanderer = ForestWanderer()
+
+
+def explore_forest(player):
+    """
+    Function to explore the Forest
+    """
+    if player.forest_quest and forest_wanderer.is_alive:
+        print("You venture deeper into the Forest, the air growing thicker and the trees towering above.")
+        continue_input()
+        if battle(player, forest_wanderer):
+            player.inventory.append('villagers_amulet')
+            forest_wanderer.death_cry()
+
+            print("After a brief search, you find the lost amulet deep within the forest.")
+            print("It's time to return it to its rightful owner in the village.")
+            continue_input()
+            forest_actions(player)
+
+        else:
+            game_over(player, forest_wanderer)
+
+    else:
+        print("You wander around the Forest for a while but find nothing more than small critters.")
+        continue_input()
+        forest_actions(player)
+
+
+forest_quest = Quest("Explore the Deep Forest",
+                     "Venture into the depths of the Forest and find the lost amulet.",
+                     50)
+
+
+def talk_to_villager(player):
+    """
+    Function to talk to the villager and get a quest
+    """
+    show_stats(player)
+    if not forest_quest.is_completed:
+        if not player.forest_quest:
+
+            print(f"Villager: Ah, {player.username}, you look like someone who could help us.")
+            print("I've lost a precious amulet in the Deep Forest. It's been in my family for generations.")
+            print("I would go myself, but the forest is too dangerous and filled with creatures.")
+            print("Would you be willing to help me retrieve it? The reward will be generous.\n")
+
+            print(f"Quest: {forest_quest.name}")
+            print(f"Description: {forest_quest.description}\n")
+            print("Do you accept? (Y/N)")
+
+            choice = input('# ').lower()
+            if choice == 'y':
+                show_stats(player)
+                print("Villager: Excellent! Good luck!\n")
+                continue_input()
+                player.forest_quest = True
+
+            elif choice == 'n':
+                show_stats(player)
+                print("Villager: Oh, that's too bad. Maybe some other time then.\n")
+                continue_input()
+
+            else:
+                invalid_answer('yes_no')
+                talk_to_villager(player)
+        else:
+            print(f"Villager: Ah, {player.username}, have you found my amulet yet? (Y/N)")
+
+            choice = input('# ').lower()
+
+            if choice == 'y':
+
+                if "villagers_amulet" in player.inventory:
+                    show_stats(player)
+                    print("Villager: Ah, you've found my amulet! Thank you so much!")
+                    print("As promised, here is your reward.")
+                    print(f"Villager hands you a pouch of coins. +{forest_quest.reward} coins")
+
+                    player.coins += forest_quest.reward
+                    player.inventory.remove("villagers_amulet")
+                    continue_input()
+
+                    forest_quest.is_completed = True
+                    village_actions(player)
+
+                else:
+                    show_stats(player)
+                    print('Villager: Deception? In my village? You best not be lying.')
+                    print('*You feel a sense of shame*')
+                    continue_input()
+                    village_actions(player)
+
+            elif choice == 'n':
+                show_stats(player)
+                print("Villager: I see. Please hurry, it means a lot to me.")
+                continue_input()
+
+            else:
+                invalid_answer('yes_no')
+                talk_to_villager(player)
+    else:
+        print("Villager: Thanks a lot. You've done that for us!")
+        continue_input()
 
 
 def village_actions(player):
