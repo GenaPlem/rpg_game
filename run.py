@@ -354,7 +354,7 @@ def prolog(player):
     """
     show_stats(player)
     print('You wake up in a dimly lit Cave, the flickering light of a campfire casting shadows on the walls.')
-    print('A mysterious figure sits across, tending the fire.\n\n')
+    print('A mysterious figure sits across, tending the fire.\n')
     continue_input()
 
     show_stats(player)
@@ -447,12 +447,12 @@ def cave_actions(player):
 def explore_cave(player):
     if 'Cave' not in player.explored_locations:
         show_stats(player)
-        print('You decide to delve deeper into the Cave...')
+        print('You decide to delve deeper into the Cave...\n')
         continue_input()
 
         print('A glint catches your eye.')
         print("It's a sack of gold coins!")
-        print('*You acquire 10 coins!*')
+        print('*You acquire 10 coins!*\n')
         continue_input()
 
         player.coins += 10
@@ -554,14 +554,14 @@ def explore_forest(player):
     Function to explore the Forest
     """
     if player.forest_quest and forest_wanderer.is_alive:
-        print("You venture deeper into the Forest, the air growing thicker and the trees towering above.")
+        print("You venture deeper into the Forest, the air growing thicker and the trees towering above.\n")
         continue_input()
         if battle(player, forest_wanderer):
             player.inventory.append('villagers_amulet')
             forest_wanderer.death_cry()
 
             print("After a brief search, you find the lost amulet deep within the forest.")
-            print("It's time to return it to its rightful owner in the village.")
+            print("It's time to return it to its rightful owner in the village.\n")
             continue_input()
             forest_actions(player)
 
@@ -569,7 +569,7 @@ def explore_forest(player):
             game_over(player, forest_wanderer)
 
     else:
-        print("You wander around the Forest for a while but find nothing more than small critters.")
+        print("You wander around the Forest for a while but find nothing more than small critters.\n")
         continue_input()
         forest_actions(player)
 
@@ -642,12 +642,14 @@ def explore_village(player):
         print('You decide to wander through the narrow streets of the Village...\n')
         continue_input()
 
+        money_bag = random.randint(15, 30)
+
         print('As you stroll, you notice something shiny wedged between the cobblestones.')
         print("It's a small bag of coins, seemingly forgotten or lost!")
-        print('*You acquire 20 coins!*\n')
+        print(f'*You acquire {money_bag} coins!*\n')
         continue_input()
 
-        player.coins += 20
+        player.coins += money_bag
         player.explored_locations.append('Village')
 
         show_stats(player)
