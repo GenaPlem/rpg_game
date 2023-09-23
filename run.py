@@ -340,6 +340,8 @@ def game_over(player, enemy):
     Game over function
     """
     while True:
+        show_stats(player)
+        battle_stats(enemy)
         text_align_center("|===================================|")
         text_align_center("|            GAME OVER              |")
         text_align_center("|===================================|\n")
@@ -359,8 +361,6 @@ def game_over(player, enemy):
 
         else:
             invalid_answer('options')
-            show_stats(player)
-            battle_stats(enemy)
 
 
 def prolog(player):
@@ -518,8 +518,6 @@ def forest_actions(player):
             forest_actions(player)
 
         else:
-            show_stats(player)
-            battle_stats(enemy_wolf)
             game_over(player, enemy_wolf)
 
     else:
@@ -581,8 +579,6 @@ def explore_forest(player):
             forest_actions(player)
 
         else:
-            show_stats(player)
-            battle_stats(forest_wanderer)
             game_over(player, forest_wanderer)
 
     else:
