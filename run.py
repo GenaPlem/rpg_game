@@ -66,9 +66,7 @@ class Player:
     def win(self, enemy):
         show_stats(self)
         battle_stats(enemy)
-        # print(f'You strike {enemy.name}, dealing {self.attack_dmg} damage.')
-        # continue_input()
-        print(f'You vanquish {enemy.name}, emerging victorious!')
+        print(f'You vanquish {enemy.name}, emerging victorious!\n')
         continue_input()
 
 
@@ -106,6 +104,15 @@ class ForestWanderer(Enemy):
     def death_cry(self):
         print("As the Forest Wanderer falls, you feel as if a weight has been lifted from the forest.")
         self.is_alive = False
+        continue_input()
+
+
+class Merchant:
+    def __init__(self):
+        self.name = 'Seraphina the Mystic Merchant'
+
+    def talk(self):
+        print(f"{self.name}: Welcome to my Shop. You can buy potions and improve your attack damage.")
         continue_input()
 
 
@@ -605,7 +612,7 @@ def talk_to_villager(player):
                 invalid_answer('yes_no')
                 talk_to_villager(player)
         else:
-            print(f"Villager: Ah, {player.username}, have you found my amulet yet? (Y/N)")
+            print(f"Villager: Ah, {player.username}, have you found my amulet yet? (Y/N)\n")
 
             choice = input('# ').lower()
 
@@ -615,7 +622,7 @@ def talk_to_villager(player):
                     show_stats(player)
                     print("Villager: Ah, you've found my amulet! Thank you so much!")
                     print("As promised, here is your reward.")
-                    print(f"Villager hands you a pouch of coins. +{forest_quest.reward} coins")
+                    print(f"Villager hands you a pouch of coins. +{forest_quest.reward} coins\n")
 
                     player.coins += forest_quest.reward
                     player.inventory.remove("villagers_amulet")
@@ -627,21 +634,80 @@ def talk_to_villager(player):
                 else:
                     show_stats(player)
                     print('Villager: Deception? In my village? You best not be lying.')
-                    print('*You feel a sense of shame*')
+                    print('*You feel a sense of shame*\n')
                     continue_input()
                     village_actions(player)
 
             elif choice == 'n':
                 show_stats(player)
-                print("Villager: I see. Please hurry, it means a lot to me.")
+                print("Villager: I see. Please hurry, it means a lot to me.\n")
                 continue_input()
 
             else:
                 invalid_answer('yes_no')
                 talk_to_villager(player)
     else:
-        print("Villager: Thanks a lot. You've done that for us!")
+        print("Villager: Thanks a lot. You've done that for us!\n")
         continue_input()
+
+
+def shop(player):
+    player.location = 'Shop'
+    show_stats(player)
+    merchant = Merchant()
+
+    if 'Shop' not in player.visited_locations:
+        merchant.talk()
+
+    player.visited_locations.append('Shop')
+
+    show_stats(player)
+    print('1. Buy the Potion => 15 coins')
+    print('2. Upgrade your Weapon (+5 DMG) => 25 coins')
+    print('3. Leave the Shop')
+
+    choice = input('# ')
+
+    if choice == '1':
+        if player.coins >= 15:
+            player.coins -= 15
+            player.potions += 1
+
+            show_stats(player)
+            print("Health Potions successfully purchased.\n")
+            continue_input()
+            shop(player)
+
+        else:
+            show_stats(player)
+            print('Looks like you have not enough money!\n')
+            continue_input()
+            shop(player)
+    elif choice == '2':
+        if player.coins >= 25:
+            player.coins -= 25
+            player.attack_dmg += 5
+
+            show_stats(player)
+            print("Your Weapon successfully Upgraded.\n")
+            continue_input()
+            shop(player)
+
+        else:
+            show_stats(player)
+            print('Looks like you have not enough money!\n')
+            continue_input()
+            shop(player)
+    elif choice == '3':
+        show_stats(player)
+        print('You leave the Shop\n')
+        continue_input()
+
+        player.location = 'Village'
+        village_actions(player)
+    else:
+        invalid_answer('options')
+        shop(player)
 
 
 def village_actions(player):
@@ -678,6 +744,13 @@ def village_actions(player):
         print('You are enter the Forest\n')
         continue_input()
         forest_actions(player)
+
+    elif choice == '3':
+        show_stats(player)
+        print('You are enter the Shop\n')
+        continue_input()
+        shop(player)
+
     elif choice == '4':
         talk_to_villager(player)
         village_actions(player)
