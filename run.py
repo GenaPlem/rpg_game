@@ -66,7 +66,7 @@ class Player:
     def win(self, enemy):
         show_stats(self)
         battle_stats(enemy)
-        print(f'You vanquish {enemy.name}, emerging victorious!\n')
+        print(f'You vanquish {enemy.name}, emerging victorious!')
         continue_input()
 
 
@@ -112,7 +112,7 @@ class Merchant:
         self.name = 'Seraphina the Mystic Merchant'
 
     def talk(self):
-        print(f"{self.name}: Welcome to my Shop. You can buy potions and improve your attack damage.")
+        print(f"{self.name}: Welcome to my Shop. You can buy potions and improve your attack damage.\n")
         continue_input()
 
 
@@ -574,9 +574,93 @@ def explore_forest(player):
         forest_actions(player)
 
 
+def village_actions(player):
+    """
+    Displays actions for Village location
+    """
+    if 'Village' not in player.visited_locations:
+        player.visited_locations.append('Village')
+
+        show_stats(player)
+        print("As you step into the Village, you're greeted by the warm smiles of the villagers.")
+        continue_input()
+
+        print("Children are playing in the streets, and the aroma of freshly baked bread fills the air.")
+        continue_input()
+
+        print("A sense of community and peace envelops you.")
+        continue_input()
+
+    show_stats(player)
+    print('1. Venture into the Forest')
+    print('2. Wander Around the Village')
+    print('3. Visit the Merchant')
+    print('4. Talk to the Villager')
+    print('5. Approach the Castle')
+    print('6. Drink Health Potion (+30HP)')
+
+    choice = input('# ')
+
+    if choice == '1':
+        player.location = 'Forest'
+
+        show_stats(player)
+        print('You are enter the Forest\n')
+        continue_input()
+        forest_actions(player)
+
+    elif choice == '2':
+        explore_village(player)
+
+    elif choice == '3':
+        show_stats(player)
+        print('You are enter the Shop\n')
+        continue_input()
+        shop(player)
+
+    elif choice == '4':
+        talk_to_villager(player)
+        village_actions(player)
+
+    elif choice == '6':
+        use_potion(player)
+        village_actions(player)
+
+    else:
+        invalid_answer('options')
+        village_actions(player)
+
+
 forest_quest = Quest("Explore the Deep Forest",
                      "Venture into the depths of the Forest and find the lost amulet.",
                      50)
+
+
+def explore_village(player):
+    if 'Village' not in player.explored_locations:
+        show_stats(player)
+        print('You decide to wander through the narrow streets of the Village...\n')
+        continue_input()
+
+        print('As you stroll, you notice something shiny wedged between the cobblestones.')
+        print("It's a small bag of coins, seemingly forgotten or lost!")
+        print('*You acquire 20 coins!*\n')
+        continue_input()
+
+        player.coins += 20
+        player.explored_locations.append('Village')
+
+        show_stats(player)
+        print("Feeling a bit richer and more familiar with the Village, you ponder your next move.\n")
+        continue_input()
+        village_actions(player)
+
+    else:
+        show_stats(player)
+        print("You've already explored the Village thoroughly and found its hidden treasures.")
+        print("Perhaps it's time to seek new adventures.\n")
+        continue_input()
+        village_actions(player)
 
 
 def talk_to_villager(player):
@@ -622,7 +706,7 @@ def talk_to_villager(player):
                     show_stats(player)
                     print("Villager: Ah, you've found my amulet! Thank you so much!")
                     print("As promised, here is your reward.")
-                    print(f"Villager hands you a pouch of coins. +{forest_quest.reward} coins\n")
+                    print(f"*Villager hands you a pouch of coins. (+{forest_quest.reward} coins)*\n")
 
                     player.coins += forest_quest.reward
                     player.inventory.remove("villagers_amulet")
@@ -708,60 +792,6 @@ def shop(player):
     else:
         invalid_answer('options')
         shop(player)
-
-
-def village_actions(player):
-    """
-    Displays actions for Village location
-    """
-    if 'Village' not in player.visited_locations:
-        player.visited_locations.append('Village')
-
-        show_stats(player)
-        print("As you step into the Village, you're greeted by the warm smiles of the villagers.")
-        continue_input()
-
-        print("Children are playing in the streets, and the aroma of freshly baked bread fills the air.")
-        continue_input()
-
-        print("A sense of community and peace envelops you.")
-        continue_input()
-
-    show_stats(player)
-    print('1. Venture into the Forest')
-    print('2. Wander Around the Village')
-    print('3. Visit the Merchant')
-    print('4. Talk to the Villager')
-    print('5. Approach the Castle')
-    print('6. Drink Health Potion (+30HP)')
-
-    choice = input('# ')
-
-    if choice == '1':
-        player.location = 'Forest'
-
-        show_stats(player)
-        print('You are enter the Forest\n')
-        continue_input()
-        forest_actions(player)
-
-    elif choice == '3':
-        show_stats(player)
-        print('You are enter the Shop\n')
-        continue_input()
-        shop(player)
-
-    elif choice == '4':
-        talk_to_villager(player)
-        village_actions(player)
-
-    elif choice == '6':
-        use_potion(player)
-        village_actions(player)
-
-    else:
-        invalid_answer('options')
-        village_actions(player)
 
 
 def show_rules():
