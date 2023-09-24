@@ -18,9 +18,9 @@ class Player:
         self.inventory = []
         self.explored_locations = []
         self.visited_locations = []
+        self.completed_quests = []
         self.forest_quest = False
         self.doomed_path_quest = False
-        self.completed_quests = []
 
     def attack(self, enemy):
         enemy.hp = max(0, enemy.hp - self.attack_dmg)
@@ -164,8 +164,8 @@ def ascii_art_logo():
 
     ascii_art = [
         '          ',
-        ' _____                              _       ______           ',
-        ' |  __ \\                            ( )     |  ____|           ',
+        '  _____                              _       ______           ',
+        '  |  __ \\                            ( )     |  ____|           ',
         ' | |  | |_ __ __ _  __ _  ___  _ __ |/ ___  | |__  _   _  ___ ',
         ' | |  | | \'__/ _` |/ _` |/ _ \\| \'_ \\  / __| |  __|| | | |/ _ \\',
         ' | |__| | | | (_| | (_| | (_) | | | | \\__ \\ | |___| |_| |  __/',
@@ -202,7 +202,7 @@ def invalid_answer(validation_type):
     Displays choice error message
     """
     if validation_type == 'username':
-        print('Name should be more than 1 symbol and less then 10\n')
+        print('Your name should be more than 1 symbol and less then 10. And it cant contains numbers\n')
 
     elif validation_type == 'yes_no':
         print("No such options. Your answer might be Y or N\n")
@@ -271,9 +271,9 @@ def initialize_game():
         if 15 >= len(username.strip()) > 1 and username.isalpha():
             player = Player(username)
             return player
-        elif not username.isalpha():
-            print("Your name cannot contain numbers or special characters.\n")
-            continue_input()
+        # elif not username.isalpha():
+        #     print("Your name cannot contain numbers or special characters.\n")
+        #     continue_input()
         else:
             invalid_answer('username')
 
@@ -296,7 +296,7 @@ def battle(player, enemy):
             player.attack(enemy)
 
             if enemy.hp > 0:
-                # If enemy have a special attack then he will use it with 15% chance
+                # If enemy have a special attack then he will use it with 25% chance
                 if hasattr(enemy, 'special_attack') and random.randint(1, 100) <= 25:
                     enemy.special_attack(player)
 
@@ -666,18 +666,10 @@ def village_actions(player):
 
     elif choice == '4':
         if 'Forest Quest' not in player.completed_quests:
-            forest_quest = Quest("Explore the Deep Forest",
-                                 "Venture into the depths of the Forest and find the lost amulet.",
-                                 50,
-                                 False)
-            talk_to_villager(player, forest_quest)
+            talk_to_villager(player)
             village_actions(player)
         else:
-            forest_quest = Quest("Explore the Deep Forest",
-                                 "Venture into the depths of the Forest and find the lost amulet.",
-                                 50,
-                                 True)
-            talk_to_villager(player, forest_quest)
+            talk_to_villager(player)
             village_actions(player)
 
     elif choice == '5':
@@ -728,13 +720,17 @@ def explore_village(player):
         village_actions(player)
 
 
-def talk_to_villager(player, forest_quest):
+def talk_to_villager(player):
     """
     Function to talk to the villager and get a quest
     """
     show_stats(player)
     if 'Forest Quest' not in player.completed_quests:
         if not player.forest_quest:
+            forest_quest = Quest("Explore the Deep Forest",
+                                 "Venture into the depths of the Forest and find the lost amulet.",
+                                 50,
+                                 False)
 
             print(f"Villager: Ah, {player.username}, you look like someone who could help us.")
             print("I've lost a precious amulet in the Deep Forest. It's been in my family for generations.")
@@ -759,7 +755,7 @@ def talk_to_villager(player, forest_quest):
 
             else:
                 invalid_answer('yes_no')
-                talk_to_villager(player, forest_quest)
+                talk_to_villager(player)
         else:
             print(f"Villager: Ah, {player.username}, have you found my amulet yet? (Y/N)\n")
 
@@ -768,6 +764,11 @@ def talk_to_villager(player, forest_quest):
             if choice == 'y':
 
                 if "villagers_amulet" in player.inventory:
+                    forest_quest = Quest("Explore the Deep Forest",
+                                         "Venture into the depths of the Forest and find the lost amulet.",
+                                         50,
+                                         False)
+
                     show_stats(player)
                     print("Villager: Ah, you've found my amulet! Thank you so much!")
                     print("As promised, here is your reward.")
@@ -779,6 +780,7 @@ def talk_to_villager(player, forest_quest):
                     continue_input()
 
                     forest_quest.is_completed = True
+
                     village_actions(player)
 
                 else:
@@ -795,7 +797,7 @@ def talk_to_villager(player, forest_quest):
 
             else:
                 invalid_answer('yes_no')
-                talk_to_villager(player, forest_quest)
+                talk_to_villager(player)
     else:
         print("Villager: Thanks a lot. You've done that for us!\n")
         continue_input()
@@ -1000,6 +1002,7 @@ def talk_to_king(player):
                     show_stats(player)
                     print("King: Visit my Forge Master, I told him to make your armor better and heal you!\n")
                     continue_input()
+
                     castle_actions(player)
 
                 else:
@@ -1091,10 +1094,6 @@ def doomed_path_actions(player):
     #     print('You Climb The Mountain\n')
     #     continue_input()
     #     mountain_actions(player)
-
-    # elif choice == '4':
-    #
-    #     castle_actions(player)
 
     elif choice == '4':
         use_potion(player)
