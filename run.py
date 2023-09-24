@@ -419,7 +419,8 @@ def prolog(player):
     show_stats(player)
     print(f'Stranger: Ah, {player.username}, you stir at last.')
     print("I heard a dragon's cry and found you lying at the Mountain's base.")
-    print("You must've ventured to the summit, where the fabled Dragon dwells.\n")
+    print("You must've ventured to the summit, where the fabled Dragon dwells.")
+    print("If you're intent on facing the dragon again, please bring its eye to me! I would be grateful.")
 
     continue_input()
 
@@ -1074,7 +1075,7 @@ def doomed_path_actions(player):
         continue_input()
 
         if battle(player, ogre):
-            print('*You cut Ogres Head*')
+            print('*You cut Ogres Head*\n')
             player.inventory.append('ogre_head')
         else:
             game_over(player, ogre)
@@ -1101,12 +1102,27 @@ def doomed_path_actions(player):
         explore_doomed_path(player)
 
     elif choice == '3':
-        player.location = 'Mountain Peak'
-
         show_stats(player)
-        print('You Climb The Mountain\n')
-        continue_input()
-        mountain_actions(player)
+        print('This is a way to the Dragon. Are you strong enough? (Y/N)')
+
+        choice = input('# ').lower()
+
+        if choice == 'y':
+            player.location = 'Mountain Peak'
+
+            show_stats(player)
+            print('You Climb The Mountain\n')
+            continue_input()
+            mountain_actions(player)
+
+        elif choice == 'n':
+            show_stats(player)
+            print("No one escape him yet. Prepare yourself well.\n")
+            continue_input()
+            doomed_path_actions(player)
+
+        else:
+            invalid_answer('yes_no')
 
     elif choice == '4':
         use_potion(player)
@@ -1172,7 +1188,7 @@ def mountain_actions(player):
 
     show_stats(player)
     print('1. Go down to the Doomed Path')
-    print('2. Look at the ')
+    print('2. Look around')
     print('3. Drink Health Potion (+30HP)')
 
     choice = input('# ')
@@ -1187,7 +1203,7 @@ def mountain_actions(player):
 
     elif choice == '2':
         show_stats(player)
-        # explore_mountain_peak(player)
+        explore_mountain_peak(player)
 
     elif choice == '3':
         use_potion(player)
@@ -1195,6 +1211,40 @@ def mountain_actions(player):
 
     else:
         invalid_answer('options')
+        mountain_actions(player)
+
+
+def explore_mountain_peak(player):
+    """
+    Function to look around on the Mountains Peak
+    """
+    if 'Mountain Peak' not in player.explored_locations:
+        show_stats(player)
+        print('You stand over the defeated dragon, its remaining eye staring lifelessly into the void.\n')
+        continue_input()
+
+        print("A sense of accomplishment washes over you. Your journey, fraught with peril, has come to an end.")
+        print("You've conquered the Mountain Peak and vanquished the dragon that terrorized these lands.")
+        continue_input()
+
+        show_stats(player)
+        print("As you prepare to leave, you remember the Dragon's Eye you've taken.")
+        print("The Stranger who aided you at the beginning of your journey might find it valuable.")
+        print("Perhaps it's time to pay him a visit and bring closure to your adventure.\n")
+        continue_input()
+
+        player.explored_locations.append('Mountain Peak')
+
+        show_stats(player)
+        print("Feeling victorious and fulfilled, you ponder your next move.\n")
+        continue_input()
+        mountain_actions(player)
+
+    else:
+        show_stats(player)
+        print("You've already explored the Mountain Peak thoroughly and claimed its hidden treasures.")
+        print("Perhaps it's time to seek new adventures.\n")
+        continue_input()
         mountain_actions(player)
 
 
