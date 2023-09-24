@@ -50,7 +50,7 @@ class Player:
             continue_input()
 
             # Add random chance to counter-attack the enemy
-        if random.randint(1, 100) <= 30:
+        if random.randint(1, 100) <= 35:
             print(f"Your counter-attack is successful, dealing {self.attack_dmg} damage to {enemy.name}.")
 
             enemy.hp = max(0, enemy.hp - self.attack_dmg)
@@ -99,7 +99,7 @@ class ForestWanderer(Enemy):
         self.is_alive = True
 
     def special_attack(self, player):
-        special_dmg = int(self.attack_dmg * 1.5)
+        special_dmg = int(self.attack_dmg * 1.3)
         print(f"{self.name} focuses its dark energy and unleashes a Shadow Strike, dealing {special_dmg} damage!")
         player.hp = max(0, player.hp - special_dmg)
         continue_input()
@@ -420,7 +420,7 @@ def prolog(player):
     print(f'Stranger: Ah, {player.username}, you stir at last.')
     print("I heard a dragon's cry and found you lying at the Mountain's base.")
     print("You must've ventured to the summit, where the fabled Dragon dwells.")
-    print("If you're intent on facing the dragon again, please bring its eye to me! I would be grateful.")
+    print("If you're intent on facing the dragon again, please bring its eye to me! I would be grateful.\n")
 
     continue_input()
 
@@ -481,12 +481,13 @@ def cave_actions(player):
         explore_cave(player)
 
     elif choice == '3':
-        show_stats(player)
-        print("Stranger: Ah, you're still here?")
-        print("Time waits for no one, especially not in these treacherous lands. I suggest you move along.")
-        print("I have my own matters to attend to.\n")
-
-        continue_input()
+        # show_stats(player)
+        # print("Stranger: Ah, you're still here?")
+        # print("Time waits for no one, especially not in these treacherous lands. I suggest you move along.")
+        # print("I have my own matters to attend to.\n")
+        #
+        # continue_input()
+        talk_to_stranger(player)
         cave_actions(player)
 
     elif choice == '4':
@@ -520,6 +521,24 @@ def explore_cave(player):
         print("You've uncovered all the Cave's secrets.\n")
         continue_input()
         cave_actions(player)
+
+
+def talk_to_stranger(player):
+    """
+    Function to talk to the Stranger
+    """
+    show_stats(player)
+    if 'dragons_eye' in player.inventory:
+        player.inventory.remove('dragons_eye')
+        game_completion(player)
+        main_menu()
+
+    else:
+        show_stats(player)
+        print("Stranger: Ah, you're still here?")
+        print("Time waits for no one, especially not in these treacherous lands. I suggest you move along.")
+        print("I have my own matters to attend to.\n")
+        continue_input()
 
 
 def forest_actions(player):
@@ -1180,7 +1199,7 @@ def mountain_actions(player):
         continue_input()
 
         if battle(player, dragon):
-            print('*You cut Dragons Eye*')
+            print('*You extract Dragons Eye*\n')
             player.inventory.append('dragons_eye')
         else:
             game_over(player, dragon)
@@ -1246,6 +1265,30 @@ def explore_mountain_peak(player):
         print("Perhaps it's time to seek new adventures.\n")
         continue_input()
         mountain_actions(player)
+
+
+def game_completion(player):
+    show_stats(player)
+    print("As you hand over the dragon's eye to the Stranger, a sense of finality washes over you.")
+    continue_input()
+
+    print("The Stranger smiles, 'You've done it. You've not only defeated the dragon but also fulfilled a destiny.'")
+    continue_input()
+
+    print("'The villagers may never know the full extent of your heroism, but their lives are better because of you.'")
+    continue_input()
+
+    print("You realize that your adventure has come to an end, but the legends of your bravery will echo through time.")
+    continue_input()
+
+    print("The Stranger adds, 'Who knows, maybe our paths will cross again in another life, another adventure.'")
+    continue_input()
+
+    print("As you step out of the cave, back into the world you've saved, you can't help but wonder what's next.")
+    continue_input()
+
+    print("Thank you for playing! Your adventure has come to an end, but the future is an open book.")
+    continue_input()
 
 
 def show_rules():
