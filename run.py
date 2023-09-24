@@ -910,7 +910,7 @@ def castle_actions(player):
             continue_input()
             castle_actions(player)
 
-        elif kings_quest.is_completed:
+        elif 'Kings Quest' in player.completed_quests:
             show_stats(player)
             print('You step on the Doomed Path\n')
             continue_input()
@@ -934,19 +934,17 @@ def castle_actions(player):
         castle_actions(player)
 
 
-kings_quest = Quest('Slay the Ogre on the Doomed Path',
-                    'An ogre has been terrorizing the Doomed Path. Slay it and bring peace to the land.',
-                    100,
-                    False)
-
-
 def talk_to_king(player):
     """
     Function to talk to the King and get a quest
     """
     show_stats(player)
-    if not kings_quest.is_completed:
+    if 'Kings Quest' not in player.completed_quests:
         if not player.doomed_path_quest:
+            kings_quest = Quest('Slay the Ogre on the Doomed Path',
+                                'An ogre has been terrorizing the Doomed Path. Slay it and bring peace to the land.',
+                                100,
+                                False)
 
             print(f"King: Hey you! You appear before me just as a new task arises that requires... competence.")
             print("An ogre on the Doomed Path disrupts trade and endangers the village.")
@@ -979,12 +977,18 @@ def talk_to_king(player):
             if choice == 'y':
 
                 if "ogre_head" in player.inventory:
+                    kings_quest = Quest('Slay the Ogre on the Doomed Path',
+                                        'Ogre has been terrorizing the Doomed Path Slay it and bring peace to the land',
+                                        100,
+                                        False)
+
                     show_stats(player)
                     print("King: You've done it! The Doomed Path is safe once more!")
                     print("As promised, here is your reward. A King's word is his bond.\n")
                     print(f"*The King gives you a hefty pouch of coins. (+{kings_quest.reward} coins)*\n")
 
                     player.coins += kings_quest.reward
+                    player.completed_quests.append('Kings Quest')
                     player.inventory.remove("ogre_head")
 
                     player.inventory.append('hidden_upgrade_token')
@@ -1075,15 +1079,18 @@ def doomed_path_actions(player):
         castle_actions(player)
 
     elif choice == '2':
+        show_stats(player)
         print('Looking around...')
         continue_input()
-        castle_actions(player)
+        doomed_path_actions(player)
 
     # elif choice == '3':
-        # show_stats(player)
-        # forge_master(player)
-        # castle_actions(player)
-        # shop(player)
+    #     player.location = 'Mountain Peak'
+    # 
+    #     show_stats(player)
+    #     print('You Climb The Mountain\n')
+    #     continue_input()
+    #     mountain_actions(player)
 
     # elif choice == '4':
     #
