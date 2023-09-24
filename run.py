@@ -317,6 +317,9 @@ def battle(player, enemy):
 
 
 def use_potion(player):
+    """
+    Function to use potion and restore HP
+    """
     if player.potions > 0:
 
         if player.hp != player.max_hp:
@@ -658,6 +661,9 @@ forest_quest = Quest("Explore the Deep Forest",
 
 
 def explore_village(player):
+    """
+    Function to explore the Village
+    """
     if 'Village' not in player.explored_locations:
         show_stats(player)
         print('You decide to wander through the narrow streets of the Village...\n')
@@ -759,6 +765,9 @@ def talk_to_villager(player):
 
 
 def shop(player):
+    """
+    Displays shop
+    """
     player.location = 'Shop'
     show_stats(player)
     merchant = Merchant()
@@ -818,6 +827,9 @@ def shop(player):
 
 
 def castle_actions(player):
+    """
+    Castle's location actions
+    """
     if 'Castle' not in player.visited_locations:
         player.visited_locations.append('Castle')
 
@@ -854,8 +866,7 @@ def castle_actions(player):
 
     elif choice == '3':
         show_stats(player)
-        print('Speak with the Forge Master\n')
-        continue_input()
+        forge_master(player)
         castle_actions(player)
         # shop(player)
 
@@ -923,9 +934,16 @@ def talk_to_king(player):
 
                     player.coins += kings_quest.reward
                     player.inventory.remove("ogre_head")
+
+                    player.inventory.append('hidden_upgrade_token')
+
                     continue_input()
 
                     kings_quest.is_completed = True
+
+                    show_stats(player)
+                    print("King: By the way. Visit my Forge Master, I told him to make your armor better!")
+                    continue_input()
                     castle_actions(player)
 
                 else:
@@ -945,6 +963,24 @@ def talk_to_king(player):
                 talk_to_king(player)
     else:
         print("King: You've done a great service to the kingdom. Thank you!\n")
+        continue_input()
+
+
+def forge_master(player):
+    """
+    Function to talk to forge master
+    """
+    show_stats(player)
+    if "hidden_upgrade_token" in player.inventory:
+        print(f'Forge Master: Ah, {player.username}, your deeds have not gone unnoticed.')
+        print("Hand over your armor. I'll fortify it for you.")
+
+        player.max_hp += 20
+        player.inventory.remove("hidden_upgrade_token")
+        continue_input()
+
+    else:
+        print("Forge Master: I'm busy right now. Come back later.")
         continue_input()
 
 
