@@ -399,21 +399,18 @@ def prolog(player):
     continue_input()
 
     show_stats(player)
-    print(f'''Stranger:
-        Ah, {player.username}, you stir at last.
-        I heard a dragon's cry and found you lying at the Mountain's base.
-        You must've ventured to the summit, where the fabled Dragon dwells.
-    ''')
+    print(f'Stranger: Ah, {player.username}, you stir at last.')
+    print("I heard a dragon's cry and found you lying at the Mountain's base.")
+    print("You must've ventured to the summit, where the fabled Dragon dwells.")
+
     continue_input()
 
     show_stats(player)
 
     while True:
-        print(f'''Stranger:
-        This elixir will mend your wounds.
-        *He extends a vial of glowing liquid*
-        *Will you drink it? (Y/N)*
-    ''')
+        print("Stranger: This elixir will mend your wounds.")
+        print("*He extends a vial of glowing liquid*")
+        print("*Will you drink it? (Y/N)*")
 
         drink_potion = input('# ').lower()
 
@@ -422,19 +419,17 @@ def prolog(player):
 
             show_stats(player)
             print(f'Your health now is {player.hp}/{player.max_hp}HP\n')
-            print('''Stranger:
-            Good, now you are ready to go.
-            One more thing: if you want to get more Potions like this, just find the Merchant in the Village
-            ''')
+            print('Stranger: Good, now you are ready to go.')
+            print("One more thing: if you want to get more Potions like this, just find the Merchant in the Village")
+
             continue_input()
             break
 
         elif drink_potion == 'n':
             show_stats(player)
-            print('''Stranger:
-            As you say so...
-            By the way, if you are interested in survive, you have to find the Merchant in the Village
-            ''')
+            print("Stranger: As you say so...")
+            print("By the way, if you are interested in survive, you have to find the Merchant in the Village")
+
             continue_input()
             break
 
@@ -468,11 +463,10 @@ def cave_actions(player):
 
     elif choice == '3':
         show_stats(player)
-        print('''Stranger:
-        Ah, you're still here?
-        Time waits for no one, especially not in these treacherous lands. I suggest you move along.
-        I have my own matters to attend to.
-        ''')
+        print("Stranger: Ah, you're still here?")
+        print("Time waits for no one, especially not in these treacherous lands. I suggest you move along.")
+        print("I have my own matters to attend to.")
+
         continue_input()
         cave_actions(player)
 
@@ -914,7 +908,7 @@ def castle_actions(player):
 
         elif 'Kings Quest' in player.completed_quests:
             show_stats(player)
-            print('You step on the Doomed Path\n')
+            print('You step onto the Doomed Path.\n')
             continue_input()
 
             player.location = 'Doomed Path'
@@ -1059,7 +1053,7 @@ def doomed_path_actions(player):
         continue_input()
 
         if battle(player, ogre):
-            print('You cut Ogres head')
+            print('*You cut Ogres Head*')
             player.inventory.append('ogre_head')
         else:
             game_over(player, ogre)
@@ -1077,7 +1071,7 @@ def doomed_path_actions(player):
         player.location = 'Castle'
 
         show_stats(player)
-        print('CASTLE\n')
+        print("You've returned to the Castle from the Doomed Path.\n")
         continue_input()
         castle_actions(player)
 
@@ -1085,14 +1079,14 @@ def doomed_path_actions(player):
         show_stats(player)
         print('Looking around...')
         continue_input()
-        doomed_path_actions(player)
+        explore_doomed_path(player)
 
-    # elif choice == '3':
-    #     player.location = 'Mountain Peak'
-    # 
-    #     show_stats(player)
-    #     print('You Climb The Mountain\n')
-    #     continue_input()
+    elif choice == '3':
+        player.location = 'Mountain Peak'
+
+        show_stats(player)
+        print('You Climb The Mountain\n')
+        continue_input()
     #     mountain_actions(player)
 
     elif choice == '4':
@@ -1101,6 +1095,37 @@ def doomed_path_actions(player):
 
     else:
         invalid_answer('options')
+        doomed_path_actions(player)
+
+
+def explore_doomed_path(player):
+    """
+    Function to look around the Doomed Path
+    """
+    if 'Doomed Path' not in player.explored_locations:
+        show_stats(player)
+        print('You decide to explore the area where the Ogre used to roam...\n')
+        continue_input()
+
+        money_bag = random.randint(30, 50)
+
+        print('As you sift through the debris and remnants of the Ogre\'s lair, your eyes catch a glint.')
+        print("It's a small stash of gold coins, likely plundered by the Ogre!")
+        print(f'*You acquire {money_bag} coins!*\n')
+        continue_input()
+
+        player.coins += money_bag
+        player.explored_locations.append('Doomed Path')
+
+        show_stats(player)
+        print("Feeling a bit richer and more relieved that the Ogre is no more, you ponder your next move.\n")
+        continue_input()
+        doomed_path_actions(player)
+    else:
+        show_stats(player)
+        print("You've already explored the Doomed Path thoroughly and claimed its hidden treasures.")
+        print("Perhaps it's time to seek new adventures.\n")
+        continue_input()
         doomed_path_actions(player)
 
 
