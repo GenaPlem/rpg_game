@@ -19,6 +19,7 @@ class Player:
         self.explored_locations = []
         self.visited_locations = []
         self.forest_quest = False
+        self.doomed_path_quest = False
 
     def attack(self, enemy):
         enemy.hp = max(0, enemy.hp - self.attack_dmg)
@@ -635,6 +636,13 @@ def village_actions(player):
         talk_to_villager(player)
         village_actions(player)
 
+    elif choice == '5':
+        player.location = 'Castle'
+
+        show_stats(player)
+        print('You step through the grand archway, entering the Castle.\n')
+        continue_input()
+        castle_actions(player)
     elif choice == '6':
         use_potion(player)
         village_actions(player)
@@ -807,6 +815,137 @@ def shop(player):
     else:
         invalid_answer('options')
         shop(player)
+
+
+def castle_actions(player):
+    if 'Castle' not in player.visited_locations:
+        player.visited_locations.append('Castle')
+
+        show_stats(player)
+        print("")
+        continue_input()
+
+        print("")
+        continue_input()
+
+        print("\n")
+        continue_input()
+
+    show_stats(player)
+    print('1. Return to the Village')
+    print('2. Talk to the King')
+    print('3. Speak with the Forge Master')
+    print('4. Go to the Path of Doomed')
+    print('5. Drink Health Potion (+30HP)')
+
+    choice = input('# ')
+
+    if choice == '1':
+        player.location = 'Village'
+
+        show_stats(player)
+        print('You step onto the worn path leading back to the Village.\n')
+        continue_input()
+        village_actions(player)
+
+    elif choice == '2':
+        talk_to_king(player)
+        castle_actions(player)
+
+    elif choice == '3':
+        show_stats(player)
+        print('Speak with the Forge Master\n')
+        continue_input()
+        castle_actions(player)
+        # shop(player)
+
+    # elif choice == '4':
+    #
+    #     castle_actions(player)
+
+    elif choice == '5':
+        use_potion(player)
+        castle_actions(player)
+
+    else:
+        invalid_answer('options')
+        castle_actions(player)
+
+
+kings_quest = Quest('Slay the Ogre on the Path of the Doomed',
+                    'An ogre has been terrorizing the Path of the Doomed. Slay it and bring peace to the land.',
+                    100)
+
+
+def talk_to_king(player):
+    """
+    Function to talk to the King and get a quest
+    """
+    show_stats(player)
+    if not kings_quest.is_completed:
+        if not player.doomed_path_quest:
+
+            print(f"King: Hey you! You appear before me just as a new task arises that requires... competence.")
+            print("An ogre on the Path of the Doomed disrupts trade and endangers the village.")
+            print("Would you be willing to slay it? The reward will be generous.\n")
+
+            print(f"Quest: {kings_quest.name}")
+            print(f"Description: {kings_quest.description}\n")
+            print("Do you accept? (Y/N)")
+
+            choice = input('# ').lower()
+            if choice == 'y':
+                show_stats(player)
+                print("King: Brilliant! May fortune favor you on your quest.\n")
+                continue_input()
+                player.doomed_path_quest = True
+
+            elif choice == 'n':
+                show_stats(player)
+                print("King: Hmph. Reconsider your decision, or find your way out of my presence.\n")
+                continue_input()
+
+            else:
+                invalid_answer('yes_no')
+                talk_to_king(player)
+        else:
+            print(f"King: Hey you, have you slain the ogre yet? (Y/N)\n")
+
+            choice = input('# ').lower()
+
+            if choice == 'y':
+
+                if "ogre_head" in player.inventory:
+                    show_stats(player)
+                    print("King: You've done it! The Path of the Doomed is safe once more!")
+                    print("As promised, here is your reward. A King's word is his bond.\n")
+                    print(f"*The King gives you a hefty pouch of coins. (+{kings_quest.reward} coins)*\n")
+
+                    player.coins += kings_quest.reward
+                    player.inventory.remove("ogre_head")
+                    continue_input()
+
+                    kings_quest.is_completed = True
+                    castle_actions(player)
+
+                else:
+                    show_stats(player)
+                    print('King: How dare you lie to your King? Return when the deed is done.')
+                    print('*You feel a sense of shame*\n')
+                    continue_input()
+                    castle_actions(player)
+
+            elif choice == 'n':
+                show_stats(player)
+                print("King: Time is of the essence. Please hurry.\n")
+                continue_input()
+
+            else:
+                invalid_answer('yes_no')
+                talk_to_king(player)
+    else:
+        print("King: You've done a great service to the kingdom. Thank you!\n")
+        continue_input()
 
 
 def show_rules():
