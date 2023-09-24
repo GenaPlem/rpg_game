@@ -41,6 +41,9 @@ class Player:
             print(f'{enemy.name} retaliates, inflicting {enemy.attack_dmg - blocked_dmg} damage.')
             continue_input()
 
+            if self.hp <= 0:
+                return False
+
         else:
             print(f"You successfully parried the enemy's attack, taking no damage.")
             continue_input()
@@ -97,7 +100,7 @@ class ForestWanderer(Enemy):
     def special_attack(self, player):
         special_dmg = int(self.attack_dmg * 1.5)
         print(f"{self.name} focuses its dark energy and unleashes a Shadow Strike, dealing {special_dmg} damage!")
-        player.hp -= special_dmg
+        player.hp = max(0, player.hp - special_dmg)
         continue_input()
 
     def death_cry(self):
@@ -311,6 +314,7 @@ def battle(player, enemy):
                     battle_stats(enemy)
 
                 else:
+                    player.hp = 0
                     return False
 
             else:
@@ -580,27 +584,34 @@ def forest_actions(player):
             forest_actions(player)
 
 
-forest_wanderer = ForestWanderer()
-
-
 def explore_forest(player):
     """
     Function to explore the Forest
     """
-    if player.forest_quest and forest_wanderer.is_alive:
-        print("You venture deeper into the Forest, the air growing thicker and the trees towering above.\n")
-        continue_input()
-        if battle(player, forest_wanderer):
-            player.inventory.append('villagers_amulet')
-            forest_wanderer.death_cry()
+    if 'Forest' not in player.explored_locations:
+        if player.forest_quest:
+            forest_wanderer = ForestWanderer()
 
-            print("After a brief search, you find the lost amulet deep within the forest.")
-            print("It's time to return it to its rightful owner in the village.\n")
+            if forest_wanderer.is_alive:
+                print("You venture deeper into the Forest, the air growing thicker and the trees towering above.\n")
             continue_input()
-            forest_actions(player)
+            if battle(player, forest_wanderer):
+                player.inventory.append('villagers_amulet')
+                player.explored_locations.append('Forest')
+                forest_wanderer.death_cry()
+
+                print("After a brief search, you find the lost amulet deep within the forest.")
+                print("It's time to return it to its rightful owner in the village.\n")
+                continue_input()
+                forest_actions(player)
+
+            else:
+                game_over(player, forest_wanderer)
 
         else:
-            game_over(player, forest_wanderer)
+            print("You wander around the Forest for a while but find nothing more than small critters.\n")
+            continue_input()
+            forest_actions(player)
 
     else:
         print("You wander around the Forest for a while but find nothing more than small critters.\n")
@@ -885,12 +896,22 @@ def castle_actions(player):
 
     elif choice == '4':
         if not player.doomed_path_quest:
-            print("STRAZHNIK: I can't let you go there. It's to dangerous there")
+            show_stats(player)
+            print("Guard: I can't let you pass, it's too dangerous beyond this point.\n")
             continue_input()
             castle_actions(player)
 
+        elif kings_quest.is_completed:
+            show_stats(player)
+            print('You step on the Doomed Path\n')
+            continue_input()
+
+            player.location = 'Doomed Path'
+            doomed_path_actions(player)
+
         else:
-            print('You goes to the Doomed Path')
+            show_stats(player)
+            print('Guard: Good luck, great warrior.\n')
             continue_input()
             player.location = 'Doomed Path'
             doomed_path_actions(player)
@@ -963,7 +984,7 @@ def talk_to_king(player):
                     kings_quest.is_completed = True
 
                     show_stats(player)
-                    print("King: By the way. Visit my Forge Master, I told him to make your armor better and heal you!")
+                    print("King: Visit my Forge Master, I told him to make your armor better and heal you!\n")
                     continue_input()
                     castle_actions(player)
 
@@ -1043,9 +1064,10 @@ def doomed_path_actions(player):
         continue_input()
         castle_actions(player)
 
-    # elif choice == '2':
-        # talk_to_king(player)
-        # castle_actions(player)
+    elif choice == '2':
+        print('Looking around...')
+        continue_input()
+        castle_actions(player)
 
     # elif choice == '3':
         # show_stats(player)
