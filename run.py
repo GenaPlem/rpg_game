@@ -89,11 +89,9 @@ class Enemy:
 
 class ForestWanderer(Enemy):
     def __init__(self):
-        # Calculate enemy stats based on player stats
         super().__init__(name="Forest Wanderer", attack_dmg=12, max_hp=50)
 
         self.description = "A mysterious creature with dark fur and unsettling yellow eyes."
-        self.reward = 50
         self.is_alive = True
 
     def special_attack(self, player):
@@ -104,6 +102,25 @@ class ForestWanderer(Enemy):
 
     def death_cry(self):
         print("As the Forest Wanderer falls, you feel as if a weight has been lifted from the forest.")
+        self.is_alive = False
+        continue_input()
+
+
+class Ogre(Enemy):
+    def __init__(self):
+        super().__init__(name="DoomBringer Ogre", attack_dmg=15, max_hp=80)
+
+        self.description = "A hulking beast with thick, mottled skin and a club as large as a tree trunk."
+        self.is_alive = True
+
+    def special_attack(self, player):
+        special_dmg = int(self.attack_dmg * 1.7)
+        print(f"{self.name} roars and swings its massive club in a devastating arc, dealing {special_dmg} damage!")
+        player.hp -= special_dmg
+        continue_input()
+
+    def death_cry(self):
+        print("With a final, agonizing roar, the DoomBringer Ogre collapses, shaking the ground beneath you.")
         self.is_alive = False
         continue_input()
 
@@ -834,20 +851,17 @@ def castle_actions(player):
         player.visited_locations.append('Castle')
 
         show_stats(player)
-        print("")
+        print("As you enter the castle gates, you feel a sense of grandeur.")
         continue_input()
 
-        print("")
-        continue_input()
-
-        print("\n")
+        print("Stone walls tower above you, and the distant sound of clashing swords fills the air.\n")
         continue_input()
 
     show_stats(player)
     print('1. Return to the Village')
     print('2. Talk to the King')
     print('3. Speak with the Forge Master')
-    print('4. Go to the Path of Doomed')
+    print('4. Go to the Doomed Path')
     print('5. Drink Health Potion (+30HP)')
 
     choice = input('# ')
@@ -868,11 +882,18 @@ def castle_actions(player):
         show_stats(player)
         forge_master(player)
         castle_actions(player)
-        # shop(player)
 
-    # elif choice == '4':
-    #
-    #     castle_actions(player)
+    elif choice == '4':
+        if not player.doomed_path_quest:
+            print("STRAZHNIK: I can't let you go there. It's to dangerous there")
+            continue_input()
+            castle_actions(player)
+
+        else:
+            print('You goes to the Doomed Path')
+            continue_input()
+            player.location = 'Doomed Path'
+            doomed_path_actions(player)
 
     elif choice == '5':
         use_potion(player)
@@ -883,8 +904,8 @@ def castle_actions(player):
         castle_actions(player)
 
 
-kings_quest = Quest('Slay the Ogre on the Path of the Doomed',
-                    'An ogre has been terrorizing the Path of the Doomed. Slay it and bring peace to the land.',
+kings_quest = Quest('Slay the Ogre on the Doomed Path',
+                    'An ogre has been terrorizing the Doomed Path. Slay it and bring peace to the land.',
                     100)
 
 
@@ -897,7 +918,7 @@ def talk_to_king(player):
         if not player.doomed_path_quest:
 
             print(f"King: Hey you! You appear before me just as a new task arises that requires... competence.")
-            print("An ogre on the Path of the Doomed disrupts trade and endangers the village.")
+            print("An ogre on the Doomed Path disrupts trade and endangers the village.")
             print("Would you be willing to slay it? The reward will be generous.\n")
 
             print(f"Quest: {kings_quest.name}")
@@ -928,7 +949,7 @@ def talk_to_king(player):
 
                 if "ogre_head" in player.inventory:
                     show_stats(player)
-                    print("King: You've done it! The Path of the Doomed is safe once more!")
+                    print("King: You've done it! The Doomed Path is safe once more!")
                     print("As promised, here is your reward. A King's word is his bond.\n")
                     print(f"*The King gives you a hefty pouch of coins. (+{kings_quest.reward} coins)*\n")
 
@@ -942,7 +963,7 @@ def talk_to_king(player):
                     kings_quest.is_completed = True
 
                     show_stats(player)
-                    print("King: By the way. Visit my Forge Master, I told him to make your armor better!")
+                    print("King: By the way. Visit my Forge Master, I told him to make your armor better and heal you!")
                     continue_input()
                     castle_actions(player)
 
@@ -973,15 +994,76 @@ def forge_master(player):
     show_stats(player)
     if "hidden_upgrade_token" in player.inventory:
         print(f'Forge Master: Ah, {player.username}, your deeds have not gone unnoticed.')
-        print("Hand over your armor. I'll fortify it for you.")
+        print("Hand over your armor. I'll fortify it for you.\n")
 
         player.max_hp += 20
+        player.hp = player.max_hp
         player.inventory.remove("hidden_upgrade_token")
         continue_input()
 
     else:
-        print("Forge Master: I'm busy right now. Come back later.")
+        print("Forge Master: I'm busy right now. Come back later.\n")
         continue_input()
+
+
+def doomed_path_actions(player):
+    """
+    Function to handle actions in the Path of the Doomed
+    """
+    if 'Doomed Path' not in player.visited_locations:
+        player.visited_locations.append('Doomed Path')
+
+        show_stats(player)
+        ogre = Ogre()
+
+        print("As soon as you step into the Doomed Path")
+        print("The Ogre attack you. And the battle begins")
+        continue_input()
+
+        if battle(player, ogre):
+            print('You cut Ogres head')
+            player.inventory.append('ogre_head')
+        else:
+            game_over(player, ogre)
+        continue_input()
+
+    show_stats(player)
+    print('1. Return to the Castle')
+    print('2. Look around')
+    print('3. Climb to the Mountain Peak')
+    print('4. Drink Health Potion (+30HP)')
+
+    choice = input('# ')
+
+    if choice == '1':
+        player.location = 'Castle'
+
+        show_stats(player)
+        print('CASTLE\n')
+        continue_input()
+        castle_actions(player)
+
+    # elif choice == '2':
+        # talk_to_king(player)
+        # castle_actions(player)
+
+    # elif choice == '3':
+        # show_stats(player)
+        # forge_master(player)
+        # castle_actions(player)
+        # shop(player)
+
+    # elif choice == '4':
+    #
+    #     castle_actions(player)
+
+    elif choice == '4':
+        use_potion(player)
+        doomed_path_actions(player)
+
+    else:
+        invalid_answer('options')
+        doomed_path_actions(player)
 
 
 def show_rules():
