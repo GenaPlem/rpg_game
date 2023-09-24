@@ -13,7 +13,7 @@ class Player:
         self.hp = 20
         self.max_hp = 50
         self.coins = 0
-        self.potions = 1
+        self.potions = 0
         self.location = 'Cave'
         self.inventory = []
         self.explored_locations = []
@@ -118,7 +118,7 @@ class Ogre(Enemy):
         self.is_alive = True
 
     def special_attack(self, player):
-        special_dmg = int(self.attack_dmg * 1.7)
+        special_dmg = int(self.attack_dmg * 1.5)
         print(f"{self.name} roars and swings its massive club in a devastating arc, dealing {special_dmg} damage!")
         player.hp -= special_dmg
         continue_input()
@@ -129,9 +129,29 @@ class Ogre(Enemy):
         continue_input()
 
 
+class Dragon(Enemy):
+    def __init__(self, player):
+        # Calculate enemy stats based on player stats
+        super().__init__(name="Ferocious Dragon", attack_dmg=30, max_hp=int(player.max_hp * 2))
+
+        self.description = "A fearsome dragon with scales as hard as steel and breath as hot as fire."
+        self.is_alive = True
+
+    def special_attack(self, player):
+        special_dmg = int(self.attack_dmg * 1.5)
+        print(f"{self.name} unleashes its fiery breath, dealing {special_dmg} damage!")
+        player.hp -= special_dmg
+        continue_input()
+
+    def death_cry(self):
+        print("With a final roar, the dragon collapses, freeing the land from its reign of terror.")
+        self.is_alive = False
+        continue_input()
+
+
 class Merchant:
     def __init__(self):
-        self.name = 'Seraphina the Mystic Merchant'
+        self.name = 'Mystic Merchant'
 
     def talk(self):
         print(f"{self.name}: Welcome to my Shop. You can buy potions and improve your attack damage.\n")
@@ -271,9 +291,7 @@ def initialize_game():
         if 15 >= len(username.strip()) > 1 and username.isalpha():
             player = Player(username)
             return player
-        # elif not username.isalpha():
-        #     print("Your name cannot contain numbers or special characters.\n")
-        #     continue_input()
+
         else:
             invalid_answer('username')
 
@@ -401,7 +419,7 @@ def prolog(player):
     show_stats(player)
     print(f'Stranger: Ah, {player.username}, you stir at last.')
     print("I heard a dragon's cry and found you lying at the Mountain's base.")
-    print("You must've ventured to the summit, where the fabled Dragon dwells.")
+    print("You must've ventured to the summit, where the fabled Dragon dwells.\n")
 
     continue_input()
 
@@ -410,7 +428,7 @@ def prolog(player):
     while True:
         print("Stranger: This elixir will mend your wounds.")
         print("*He extends a vial of glowing liquid*")
-        print("*Will you drink it? (Y/N)*")
+        print("*Will you drink it? (Y/N)*\n")
 
         drink_potion = input('# ').lower()
 
@@ -420,7 +438,7 @@ def prolog(player):
             show_stats(player)
             print(f'Your health now is {player.hp}/{player.max_hp}HP\n')
             print('Stranger: Good, now you are ready to go.')
-            print("One more thing: if you want to get more Potions like this, just find the Merchant in the Village")
+            print("One more thing: if you want to get more Potions like this, just find the Merchant in the Village\n")
 
             continue_input()
             break
@@ -428,7 +446,7 @@ def prolog(player):
         elif drink_potion == 'n':
             show_stats(player)
             print("Stranger: As you say so...")
-            print("By the way, if you are interested in survive, you have to find the Merchant in the Village")
+            print("By the way, if you are interested in survive, you have to find the Merchant in the Village\n")
 
             continue_input()
             break
@@ -465,7 +483,7 @@ def cave_actions(player):
         show_stats(player)
         print("Stranger: Ah, you're still here?")
         print("Time waits for no one, especially not in these treacherous lands. I suggest you move along.")
-        print("I have my own matters to attend to.")
+        print("I have my own matters to attend to.\n")
 
         continue_input()
         cave_actions(player)
@@ -951,6 +969,7 @@ def talk_to_king(player):
             print("Do you accept? (Y/N)")
 
             choice = input('# ').lower()
+
             if choice == 'y':
                 show_stats(player)
                 print("King: Brilliant! May fortune favor you on your quest.\n")
@@ -994,7 +1013,8 @@ def talk_to_king(player):
                     kings_quest.is_completed = True
 
                     show_stats(player)
-                    print("King: Visit my Forge Master, I told him to make your armor better and heal you!\n")
+                    print("King: Visit my Forge Master")
+                    print("I told him to make your armor better. And you can rest before leaving.\n")
                     continue_input()
 
                     castle_actions(player)
@@ -1026,9 +1046,10 @@ def forge_master(player):
     show_stats(player)
     if "hidden_upgrade_token" in player.inventory:
         print(f'Forge Master: Ah, {player.username}, your deeds have not gone unnoticed.')
-        print("Hand over your armor. I'll fortify it for you.\n")
+        print("Hand over your armor. I'll fortify it for you.")
+        print('While you wait, You can rest and heal your wounds\n')
 
-        player.max_hp += 20
+        player.max_hp += 50
         player.hp = player.max_hp
         player.inventory.remove("hidden_upgrade_token")
         continue_input()
@@ -1049,7 +1070,7 @@ def doomed_path_actions(player):
         ogre = Ogre()
 
         print("As soon as you step into the Doomed Path")
-        print("The Ogre attack you. And the battle begins")
+        print("The Ogre attack you. And the battle begins\n")
         continue_input()
 
         if battle(player, ogre):
@@ -1077,8 +1098,6 @@ def doomed_path_actions(player):
 
     elif choice == '2':
         show_stats(player)
-        print('Looking around...')
-        continue_input()
         explore_doomed_path(player)
 
     elif choice == '3':
@@ -1087,7 +1106,7 @@ def doomed_path_actions(player):
         show_stats(player)
         print('You Climb The Mountain\n')
         continue_input()
-    #     mountain_actions(player)
+        mountain_actions(player)
 
     elif choice == '4':
         use_potion(player)
@@ -1108,10 +1127,11 @@ def explore_doomed_path(player):
         continue_input()
 
         money_bag = random.randint(30, 50)
+        player.potions += 1
 
-        print('As you sift through the debris and remnants of the Ogre\'s lair, your eyes catch a glint.')
+        print("As you sift through the debris and remnants of the Ogre's lair, your eyes catch a glint.")
         print("It's a small stash of gold coins, likely plundered by the Ogre!")
-        print(f'*You acquire {money_bag} coins!*\n')
+        print(f'*You acquire {money_bag} coins! And found 1 Potion*\n')
         continue_input()
 
         player.coins += money_bag
@@ -1127,6 +1147,55 @@ def explore_doomed_path(player):
         print("Perhaps it's time to seek new adventures.\n")
         continue_input()
         doomed_path_actions(player)
+
+
+def mountain_actions(player):
+    """
+    Function to handle actions on the Mountain Peak
+    """
+    if 'Mountain Peak' not in player.visited_locations:
+        player.visited_locations.append('Mountain Peak')
+
+        show_stats(player)
+        dragon = Dragon(player)
+
+        print("Mountain Peak is near")
+        print("You've heard a Dragons Roar and he starts flying to you\n")
+        continue_input()
+
+        if battle(player, dragon):
+            print('*You cut Dragons Eye*')
+            player.inventory.append('dragons_eye')
+        else:
+            game_over(player, dragon)
+        continue_input()
+
+    show_stats(player)
+    print('1. Go down to the Doomed Path')
+    print('2. Look at the ')
+    print('3. Drink Health Potion (+30HP)')
+
+    choice = input('# ')
+
+    if choice == '1':
+        player.location = 'Doomed Path'
+
+        show_stats(player)
+        print("You've returned to the Doomed Path.\n")
+        continue_input()
+        doomed_path_actions(player)
+
+    elif choice == '2':
+        show_stats(player)
+        # explore_mountain_peak(player)
+
+    elif choice == '3':
+        use_potion(player)
+        mountain_actions(player)
+
+    else:
+        invalid_answer('options')
+        mountain_actions(player)
 
 
 def show_rules():
