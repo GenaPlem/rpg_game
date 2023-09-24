@@ -20,6 +20,7 @@ class Player:
         self.visited_locations = []
         self.forest_quest = False
         self.doomed_path_quest = False
+        self.completed_quests = []
 
     def attack(self, enemy):
         enemy.hp = max(0, enemy.hp - self.attack_dmg)
@@ -141,11 +142,11 @@ class Quest:
     """
     Class for quest
     """
-    def __init__(self, name, description, reward):
+    def __init__(self, name, description, reward, is_completed):
         self.name = name
         self.description = description
         self.reward = reward
-        self.is_completed = False
+        self.is_completed = is_completed
 
 
 def clear():
@@ -664,8 +665,20 @@ def village_actions(player):
         shop(player)
 
     elif choice == '4':
-        talk_to_villager(player)
-        village_actions(player)
+        if 'Forest Quest' not in player.completed_quests:
+            forest_quest = Quest("Explore the Deep Forest",
+                                 "Venture into the depths of the Forest and find the lost amulet.",
+                                 50,
+                                 False)
+            talk_to_villager(player, forest_quest)
+            village_actions(player)
+        else:
+            forest_quest = Quest("Explore the Deep Forest",
+                                 "Venture into the depths of the Forest and find the lost amulet.",
+                                 50,
+                                 True)
+            talk_to_villager(player, forest_quest)
+            village_actions(player)
 
     elif choice == '5':
         player.location = 'Castle'
@@ -681,11 +694,6 @@ def village_actions(player):
     else:
         invalid_answer('options')
         village_actions(player)
-
-
-forest_quest = Quest("Explore the Deep Forest",
-                     "Venture into the depths of the Forest and find the lost amulet.",
-                     50)
 
 
 def explore_village(player):
@@ -720,12 +728,12 @@ def explore_village(player):
         village_actions(player)
 
 
-def talk_to_villager(player):
+def talk_to_villager(player, forest_quest):
     """
     Function to talk to the villager and get a quest
     """
     show_stats(player)
-    if not forest_quest.is_completed:
+    if 'Forest Quest' not in player.completed_quests:
         if not player.forest_quest:
 
             print(f"Villager: Ah, {player.username}, you look like someone who could help us.")
@@ -751,7 +759,7 @@ def talk_to_villager(player):
 
             else:
                 invalid_answer('yes_no')
-                talk_to_villager(player)
+                talk_to_villager(player, forest_quest)
         else:
             print(f"Villager: Ah, {player.username}, have you found my amulet yet? (Y/N)\n")
 
@@ -766,6 +774,7 @@ def talk_to_villager(player):
                     print(f"*Villager hands you a pouch of coins. (+{forest_quest.reward} coins)*\n")
 
                     player.coins += forest_quest.reward
+                    player.completed_quests.append('Forest Quest')
                     player.inventory.remove("villagers_amulet")
                     continue_input()
 
@@ -786,7 +795,7 @@ def talk_to_villager(player):
 
             else:
                 invalid_answer('yes_no')
-                talk_to_villager(player)
+                talk_to_villager(player, forest_quest)
     else:
         print("Villager: Thanks a lot. You've done that for us!\n")
         continue_input()
@@ -927,7 +936,8 @@ def castle_actions(player):
 
 kings_quest = Quest('Slay the Ogre on the Doomed Path',
                     'An ogre has been terrorizing the Doomed Path. Slay it and bring peace to the land.',
-                    100)
+                    100,
+                    False)
 
 
 def talk_to_king(player):
