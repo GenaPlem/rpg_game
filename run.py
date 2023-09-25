@@ -361,7 +361,8 @@ def initialize_game():
             print('! IMPORTANT !')
             continue_input()
             print('Here is your unique code that you can use to load the game')
-            print('Simply copy it and paste in load game')
+            print('Copy it by using right click, '
+                  'instead of "CTRL + C" that make you stop the game')
             typing(player.load_code)
             continue_input()
             return player
@@ -544,8 +545,10 @@ def game_over(player, enemy):
 
         print(f'Well well.. {player.username}. '
               f'You were defeated by {enemy.name}. So sad..')
-        print(f"This is your code for Load Game:\n{player.load_code}")
-        print('Simple copy it and paste into a load game\n')
+        print('Here is your unique code that you can use to load the game')
+        print('Copy it by using right click, '
+              'instead of "CTRL + C" that make you stop the game')
+        print(f"{player.load_code}\n")
         print('1. Go to Main Menu')
         print('2. Quit the Game')
 
@@ -834,12 +837,8 @@ def village_actions(player):
         show_stats(player)
         typing("As you step into the Village, you're greeted "
                "by the warm smiles of the villagers.")
-        continue_input()
-
         typing("Children are playing in the streets, and the aroma "
                "of freshly baked bread fills the air.")
-        continue_input()
-
         typing("A sense of community and peace envelops you.\n")
         continue_input()
 
@@ -1095,8 +1094,6 @@ def castle_actions(player):
 
         show_stats(player)
         typing("As you enter the castle gates, you feel a sense of grandeur.")
-        continue_input()
-
         typing("Stone walls tower above you, and the distant "
                "sound of clashing swords fills the air.\n")
         continue_input()
@@ -1306,7 +1303,6 @@ def doomed_path_actions(player):
 
         else:
             game_over(player, ogre)
-        continue_input()
 
     show_stats(player)
     print('1. Return to the Castle')
@@ -1406,8 +1402,8 @@ def mountain_actions(player):
         show_stats(player)
         dragon = Dragon(player)
 
-        print("Mountain Peak is near")
-        print("You've heard a Dragons Roar and he starts flying to you\n")
+        typing("Mountain Peak is near")
+        typing("You've heard a Dragons Roar and he starts flying to you\n")
         continue_input()
 
         if battle(player, dragon):
@@ -1416,7 +1412,6 @@ def mountain_actions(player):
             auto_save(player)
         else:
             game_over(player, dragon)
-        continue_input()
 
     show_stats(player)
     print('1. Go down to the Doomed Path')
@@ -1453,9 +1448,7 @@ def explore_mountain_peak(player):
     if 'Mountain Peak' not in player.explored_locations:
         show_stats(player)
         typing('You stand over the defeated dragon, its remaining eye '
-               'staring lifelessly into the void.\n')
-        continue_input()
-
+               'staring lifelessly into the void.')
         typing("A sense of accomplishment washes over you. Your journey, "
                "fraught with peril, has come to an end.")
         typing("You've conquered the Mountain Peak and vanquished the "
@@ -1545,6 +1538,10 @@ def show_rules():
     print("   - Attacking will deal damage to the enemy.")
     print("   - Defending will block some incoming damage and "
           "has a 30% chance to counter-attack.")
+    print("4. The game will automatically save your progress.")
+    print("   - You will receive a unique code when you start a new game.")
+    print("   - Use this code to load your game later.")
+    print("   - The code will also be displayed if you happen to die.")
     text_align_center('-' * terminal_width)
     continue_input()
 
