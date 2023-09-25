@@ -542,8 +542,8 @@ def game_over(player, enemy):
         text_align_center("|            GAME OVER              |")
         text_align_center("|===================================|\n")
 
-        print(f'Well well.. {player.username}.'
-              'You were defeated by {enemy.name}. So sad..')
+        print(f'Well well.. {player.username}. '
+              f'You were defeated by {enemy.name}. So sad..')
         print(f"This is your code for Load Game:\n{player.load_code}")
         print('Simple copy it and paste into a load game\n')
         print('1. Go to Main Menu')
