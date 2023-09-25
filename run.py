@@ -1,7 +1,22 @@
+import gspread
+from google.oauth2.service_account import Credentials
 import os
 import shutil
 import random
 import uuid
+
+SCOPE = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/drive"
+]
+
+CREDS = Credentials.from_service_account_file('creds.json')
+SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+SHEET = GSPREAD_CLIENT.open('DragonsEye')
+
+savings = SHEET.worksheet('savings')
 
 
 class Player:
@@ -310,6 +325,10 @@ def initialize_game():
             invalid_answer('username')
 
 
+# def auto_save(player):
+#
+
+
 def battle(player, enemy):
     """
     Starts the battle between player and enemy
@@ -406,6 +425,7 @@ def game_over(player, enemy):
 
         print(f'Well well.. {player.username}. You were defeated by {enemy.name}. So sad..')
         print(f"This is your code for Load Game: {player.load_code}")
+        print('Simple copy it and paste into a load game\n')
         print('1. Go to Main Menu')
         print('2. Quit the Game')
 
