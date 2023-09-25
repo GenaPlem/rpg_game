@@ -132,8 +132,8 @@ class ForestWanderer(Enemy):
         continue_input()
 
     def death_cry(self):
-        print("As the Forest Wanderer falls, you feel as if a weight "
-              "has been lifted from the forest.")
+        typing("As the Forest Wanderer falls, you feel as if a weight "
+               "has been lifted from the forest.")
         self.is_alive = False
         continue_input()
 
@@ -154,7 +154,7 @@ class Ogre(Enemy):
         special_dmg = int(self.attack_dmg * 1.5)
         print(f"{self.name} roars and swings its massive club "
               f"in a devastating arc, dealing {special_dmg} damage!")
-        player.hp -= special_dmg
+        player.hp = max(0, player.hp - special_dmg)
         continue_input()
 
     def death_cry(self):
@@ -183,7 +183,7 @@ class Dragon(Enemy):
         special_dmg = int(self.attack_dmg * 1.5)
         print(f"{self.name} unleashes its fiery breath, "
               f"dealing {special_dmg} damage!")
-        player.hp -= special_dmg
+        player.hp = max(0, player.hp - special_dmg)
         continue_input()
 
     def death_cry(self):
