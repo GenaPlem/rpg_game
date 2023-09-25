@@ -16,8 +16,6 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('DragonsEye')
 
-savings = SHEET.worksheet('savings')
-
 
 class Player:
     """
@@ -319,6 +317,12 @@ def initialize_game():
 
         if 15 >= len(username.strip()) > 1 and username.isalpha():
             player = Player(username)
+            print('! IMPORTANT !')
+            continue_input()
+            print('Here is your unique code that you can use to load the game')
+            print('Simply copy it and paste in load game')
+            print(player.load_code)
+            continue_input()
             return player
 
         else:
@@ -329,32 +333,73 @@ def auto_save(player):
     """
     Function to auto-save progress
     """
+    savings = SHEET.worksheet('savings')
+
     print('AUTOSAVING...')
     row = [
         player.username,
-        player.load_code,  # Convert UUID to string
+        str(player.load_code),
         player.attack_dmg,
         player.hp,
         player.max_hp,
         player.coins,
         player.potions,
         player.location,
-        ','.join(player.inventory),  # Convert list to comma-separated string
+        ','.join(player.inventory),
         ','.join(player.explored_locations),
         ','.join(player.visited_locations),
         ','.join(player.completed_quests),
-        str(player.forest_quest),
-        str(player.doomed_path_quest)
+        1 if player.forest_quest else 0,
+        1 if player.doomed_path_quest else 0
     ]
 
-    load_code_col = savings.col_values(2)  # Assuming load_code is in the second column
+    load_code_col = savings.col_values(2)
     if str(player.load_code) in load_code_col:
         # Find the row number and delete it to redefine
-        row_number = load_code_col.index(str(player.load_code)) + 1  # Adding 1 because Google Sheets is 1-indexed
-        savings.delete_row(row_number)
+        row_number = load_code_col.index(str(player.load_code)) + 1
+        savings.delete_rows(row_number, row_number + 1)
+        continue_input()
 
-    # Append the row to the Google Sheet
     savings.append_row(row)
+
+
+def load_game():
+    ascii_art_logo()
+    print('Please enter your unique code below:')
+    unique_code = input('> ')
+    savings = SHEET.worksheet('savings')
+
+    load_code_col = savings.col_values(2)
+
+    if unique_code in load_code_col:
+        row_number = load_code_col.index(unique_code) + 1
+
+        row = savings.row_values(row_number)
+
+        player = Player(row[0])
+        player.load_code = uuid.UUID(row[1])
+        player.attack_dmg = int(row[2])
+        player.hp = int(row[3])
+        player.max_hp = int(row[4])
+        player.coins = int(row[5])
+        player.potions = int(row[6])
+        player.location = row[7]
+        player.inventory = row[8].split(',')
+        player.explored_locations = row[9].split(',')
+        player.visited_locations = row[10].split(',')
+        player.completed_quests = row[11].split(',')
+        player.forest_quest = bool(int(row[12]))  # Add bool of int which is 1 or 0 become TRUE or FALSE
+        player.doomed_path_quest = bool(int(row[13]))
+
+        print("Game loaded successfully!")
+        print(f"Welcome back {player.username}\n")
+        continue_input()
+        return player
+
+    else:
+        print("No saved game found with that unique code.")
+        continue_input()
+        main_menu()
 
 
 def battle(player, enemy):
@@ -452,7 +497,7 @@ def game_over(player, enemy):
         text_align_center("|===================================|\n")
 
         print(f'Well well.. {player.username}. You were defeated by {enemy.name}. So sad..')
-        print(f"This is your code for Load Game: {player.load_code}")
+        print(f"This is your code for Load Game:\n{player.load_code}")
         print('Simple copy it and paste into a load game\n')
         print('1. Go to Main Menu')
         print('2. Quit the Game')
@@ -699,6 +744,7 @@ def explore_forest(player):
                 print("After a brief search, you find the lost amulet deep within the forest.")
                 print("It's time to return it to its rightful owner in the village.\n")
                 continue_input()
+                auto_save(player)
                 forest_actions(player)
 
             else:
@@ -1138,6 +1184,7 @@ def forge_master(player):
         player.hp = player.max_hp
         player.inventory.remove("hidden_upgrade_token")
         continue_input()
+        auto_save(player)
 
     else:
         print("Forge Master: I'm busy right now. Come back later.\n")
@@ -1161,6 +1208,8 @@ def doomed_path_actions(player):
         if battle(player, ogre):
             print('*You cut Ogres Head*\n')
             player.inventory.append('ogre_head')
+            auto_save(player)
+            
         else:
             game_over(player, ogre)
         continue_input()
@@ -1422,8 +1471,24 @@ def main_menu():
         prolog(player)
         cave_actions(player)
 
-    # elif choice == '2':
-    #     pass
+    elif choice == '2':
+        loaded_player = load_game()
+        if loaded_player.location == 'Cave':
+            cave_actions(loaded_player)
+        elif loaded_player.location == 'Forest':
+            forest_actions(loaded_player)
+        elif loaded_player.location == 'Village':
+            village_actions(loaded_player)
+        elif loaded_player.location == 'Castle':
+            castle_actions(loaded_player)
+        elif loaded_player.location == 'Doomed Path':
+            doomed_path_actions(loaded_player)
+        elif loaded_player.location == 'Mountain Peak':
+            mountain_actions(loaded_player)
+        else:
+            print('Something went wrong!')
+            continue_input()
+            main_menu()
 
     elif choice == '3':
         show_rules()
