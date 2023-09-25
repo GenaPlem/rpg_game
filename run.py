@@ -1,6 +1,7 @@
 import os
 import shutil
 import random
+import uuid
 
 
 class Player:
@@ -21,6 +22,7 @@ class Player:
         self.completed_quests = []
         self.forest_quest = False
         self.doomed_path_quest = False
+        self.load_code = uuid.uuid4()
 
     def attack(self, enemy):
         enemy.hp = max(0, enemy.hp - self.attack_dmg)
@@ -92,6 +94,9 @@ class Enemy:
 
 
 class ForestWanderer(Enemy):
+    """
+    Class for forest wanderer
+    """
     def __init__(self):
         super().__init__(name="Forest Wanderer", attack_dmg=12, max_hp=50)
 
@@ -111,6 +116,9 @@ class ForestWanderer(Enemy):
 
 
 class Ogre(Enemy):
+    """
+    Class for Ogre
+    """
     def __init__(self):
         super().__init__(name="DoomBringer Ogre", attack_dmg=15, max_hp=80)
 
@@ -130,6 +138,9 @@ class Ogre(Enemy):
 
 
 class Dragon(Enemy):
+    """
+    Class for Dragon, final boss
+    """
     def __init__(self, player):
         # Calculate enemy stats based on player stats
         super().__init__(name="Ferocious Dragon", attack_dmg=30, max_hp=int(player.max_hp * 2))
@@ -150,6 +161,9 @@ class Dragon(Enemy):
 
 
 class Merchant:
+    """
+    Class for Merchant
+    """
     def __init__(self):
         self.name = 'Mystic Merchant'
 
@@ -390,7 +404,8 @@ def game_over(player, enemy):
         text_align_center("|            GAME OVER              |")
         text_align_center("|===================================|\n")
 
-        print(f'Well well.. {player.username}. You were defeated by {enemy.name}. So sad..\n')
+        print(f'Well well.. {player.username}. You were defeated by {enemy.name}. So sad..')
+        print(f"This is your code for Load Game: {player.load_code}")
         print('1. Go to Main Menu')
         print('2. Quit the Game')
 
@@ -481,12 +496,6 @@ def cave_actions(player):
         explore_cave(player)
 
     elif choice == '3':
-        # show_stats(player)
-        # print("Stranger: Ah, you're still here?")
-        # print("Time waits for no one, especially not in these treacherous lands. I suggest you move along.")
-        # print("I have my own matters to attend to.\n")
-        #
-        # continue_input()
         talk_to_stranger(player)
         cave_actions(player)
 
@@ -500,6 +509,9 @@ def cave_actions(player):
 
 
 def explore_cave(player):
+    """
+    Function to explore the Cave
+    """
     if 'Cave' not in player.explored_locations:
         show_stats(player)
         print('You decide to delve deeper into the Cave...\n')
@@ -1268,6 +1280,9 @@ def explore_mountain_peak(player):
 
 
 def game_completion(player):
+    """
+    Game complete function
+    """
     show_stats(player)
     print("As you hand over the dragon's eye to the Stranger, a sense of finality washes over you.")
     continue_input()
