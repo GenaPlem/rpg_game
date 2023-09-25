@@ -37,7 +37,7 @@ class Player:
         self.completed_quests = []
         self.forest_quest = False
         self.doomed_path_quest = False
-        self.load_code = uuid.uuid4()
+        self.load_code = str(uuid.uuid4())
 
     def attack(self, enemy):
         enemy.hp = max(0, enemy.hp - self.attack_dmg)
@@ -325,8 +325,36 @@ def initialize_game():
             invalid_answer('username')
 
 
-# def auto_save(player):
-#
+def auto_save(player):
+    """
+    Function to auto-save progress
+    """
+    print('AUTOSAVING...')
+    row = [
+        player.username,
+        player.load_code,  # Convert UUID to string
+        player.attack_dmg,
+        player.hp,
+        player.max_hp,
+        player.coins,
+        player.potions,
+        player.location,
+        ','.join(player.inventory),  # Convert list to comma-separated string
+        ','.join(player.explored_locations),
+        ','.join(player.visited_locations),
+        ','.join(player.completed_quests),
+        str(player.forest_quest),
+        str(player.doomed_path_quest)
+    ]
+
+    load_code_col = savings.col_values(2)  # Assuming load_code is in the second column
+    if str(player.load_code) in load_code_col:
+        # Find the row number and delete it to redefine
+        row_number = load_code_col.index(str(player.load_code)) + 1  # Adding 1 because Google Sheets is 1-indexed
+        savings.delete_row(row_number)
+
+    # Append the row to the Google Sheet
+    savings.append_row(row)
 
 
 def battle(player, enemy):
@@ -477,6 +505,7 @@ def prolog(player):
             print("One more thing: if you want to get more Potions like this, just find the Merchant in the Village\n")
 
             continue_input()
+            auto_save(player)
             break
 
         elif drink_potion == 'n':
@@ -485,6 +514,7 @@ def prolog(player):
             print("By the way, if you are interested in survive, you have to find the Merchant in the Village\n")
 
             continue_input()
+            auto_save(player)
             break
 
         else:
@@ -605,6 +635,7 @@ def forest_actions(player):
             print(f"After searching, you found {coins_found} coins.\n")
 
             continue_input()
+            auto_save(player)
             forest_actions(player)
 
         else:
@@ -844,6 +875,7 @@ def talk_to_villager(player):
                     continue_input()
 
                     forest_quest.is_completed = True
+                    auto_save(player)
 
                     village_actions(player)
 
@@ -1069,6 +1101,7 @@ def talk_to_king(player):
                     print("I told him to make your armor better. And you can rest before leaving.\n")
                     continue_input()
 
+                    auto_save(player)
                     castle_actions(player)
 
                 else:
@@ -1233,6 +1266,7 @@ def mountain_actions(player):
         if battle(player, dragon):
             print('*You extract Dragons Eye*\n')
             player.inventory.append('dragons_eye')
+            auto_save(player)
         else:
             game_over(player, dragon)
         continue_input()
