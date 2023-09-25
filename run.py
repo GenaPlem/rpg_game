@@ -974,7 +974,7 @@ def talk_to_villager(player):
                           " Thank you so much!")
                     print("As promised, here is your reward.")
                     print(f"*Villager hands you a pouch of coins. "
-                          "(+{forest_quest.reward} coins)*\n")
+                          f"(+{forest_quest.reward} coins)*\n")
 
                     player.coins += forest_quest.reward
                     player.completed_quests.append('Forest Quest')
