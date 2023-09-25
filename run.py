@@ -4,6 +4,7 @@ import os
 import shutil
 import random
 import uuid
+import time
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -18,7 +19,9 @@ SHEET = GSPREAD_CLIENT.open('DragonsEye')
 
 
 class Player:
-    """Class for player"""
+    """
+    Class for player
+    """
 
     def __init__(self, username):
         self.username = username
@@ -199,8 +202,8 @@ class Merchant:
         self.name = 'Mystic Merchant'
 
     def talk(self):
-        print(f"{self.name}: Welcome to my Shop.")
-        print("You can buy potions and improve your attack damage.\n")
+        typing(f"{self.name}: Welcome to my Shop.")
+        typing("You can buy potions and improve your attack damage.\n")
         continue_input()
 
 
@@ -256,6 +259,16 @@ def text_align_center(text):
     Centralize text
     """
     print(text.center(shutil.get_terminal_size()[0]))
+
+
+def typing(text, delay=0.02):
+    """
+    Text typing animation
+    """
+    for char in text:
+        print(char, end='', flush=True)
+        time.sleep(delay)
+    print()
 
 
 def continue_input():
@@ -349,7 +362,7 @@ def initialize_game():
             continue_input()
             print('Here is your unique code that you can use to load the game')
             print('Simply copy it and paste in load game')
-            print(player.load_code)
+            typing(player.load_code)
             continue_input()
             return player
 
@@ -392,6 +405,9 @@ def auto_save(player):
 
 
 def load_game():
+    """
+    Function to load the game by unique code
+    """
     ascii_art_logo()
     print('Please enter your unique code below:')
     unique_code = input('> ')
@@ -551,27 +567,28 @@ def prolog(player):
     Game Prolog
     """
     show_stats(player)
-    print('You wake up in a dimly lit Cave, '
-          'the flickering light of a campfire casting shadows on the walls.')
-    print('A mysterious figure sits across, tending the fire.\n')
+    typing('You wake up in a dimly lit Cave, '
+           'the flickering light of a campfire casting shadows on the walls.')
+    typing('A mysterious figure sits across, tending the fire.\n')
     continue_input()
 
     show_stats(player)
-    print(f'Stranger: Ah, {player.username}, you stir at last.')
-    print("I heard a dragon's cry and found you lying at the Mountain's base.")
-    print("You must've ventured to the summit, "
-          "where the fabled Dragon dwells.")
-    print("If you're intent on facing the dragon again, "
-          "please bring its eye to me! I would be grateful.\n")
+    typing(f'Stranger: Ah, {player.username}, you stir at last.')
+    typing("I heard a dragon's cry and found you lying "
+           "at the Mountain's base.")
+    typing("You must've ventured to the summit, "
+           "where the fabled Dragon dwells.")
+    typing("If you're intent on facing the dragon again, "
+           "please bring its eye to me! I would be grateful.\n")
 
     continue_input()
 
     show_stats(player)
 
     while True:
-        print("Stranger: This elixir will mend your wounds.")
-        print("*He extends a vial of glowing liquid*")
-        print("*Will you drink it? (Y/N)*\n")
+        typing("Stranger: This elixir will mend your wounds.")
+        typing("*He extends a vial of glowing liquid*")
+        typing("*Will you drink it? (Y/N)*\n")
 
         drink_potion = input('# ').lower()
 
@@ -580,9 +597,9 @@ def prolog(player):
 
             show_stats(player)
             print(f'Your health now is {player.hp}/{player.max_hp}HP\n')
-            print('Stranger: Good, now you are ready to go.')
-            print("One more thing: if you want to get more Potions like this, "
-                  "just find the Merchant in the Village\n")
+            typing('Stranger: Good, now you are ready to go.')
+            typing("One more thing: if you want to get more Potions like this,"
+                   " just find the Merchant in the Village\n")
 
             continue_input()
             auto_save(player)
@@ -590,9 +607,9 @@ def prolog(player):
 
         elif drink_potion == 'n':
             show_stats(player)
-            print("Stranger: As you say so...")
-            print("By the way, if you are interested in survive, "
-                  "you have to find the Merchant in the Village\n")
+            typing("Stranger: As you say so...")
+            typing("By the way, if you are interested in survive, "
+                   "you have to find the Merchant in the Village\n")
 
             continue_input()
             auto_save(player)
@@ -648,9 +665,9 @@ def explore_cave(player):
         print('You decide to delve deeper into the Cave...\n')
         continue_input()
 
-        print('A glint catches your eye.')
-        print("It's a sack of gold coins!")
-        print('*You acquire 10 coins!*\n')
+        typing('A glint catches your eye.')
+        typing("It's a sack of gold coins!")
+        typing('*You acquire 10 coins!*\n')
         continue_input()
 
         player.coins += 10
@@ -678,11 +695,11 @@ def talk_to_stranger(player):
 
     else:
         show_stats(player)
-        print("Stranger: Ah, you're still here?")
-        print("Time waits for no one, "
-              "especially not in these treacherous lands. "
-              "I suggest you move along.")
-        print("I have my own matters to attend to.\n")
+        typing("Stranger: Ah, you're still here?")
+        typing("Time waits for no one, "
+               "especially not in these treacherous lands. "
+               "I suggest you move along.")
+        typing("I have my own matters to attend to.\n")
         continue_input()
 
 
@@ -694,22 +711,22 @@ def forest_actions(player):
         enemy_wolf = Enemy('Wolf', 5, 40)
 
         show_stats(player)
-        print('As you step out of the Cave, '
-              'you feel the fresh air and sun on your face.')
-        print('Suddenly, a low growl comes from the bushes. '
-              'A ferocious Wolf lunges at you.\n')
+        typing('As you step out of the Cave, '
+               'you feel the fresh air and sun on your face.')
+        typing('Suddenly, a low growl comes from the bushes. '
+               'A ferocious Wolf lunges at you.\n')
         continue_input()
 
-        print('You were attacked by a Wolf')
+        typing('You were attacked by a Wolf')
         print('*The Wolf bites you, dealing 5 damage!\n')
         continue_input()
 
         player.hp -= 5
 
         show_stats(player)
-        print('You quickly draw your sword, '
-              'realizing that the forest is not as welcoming as it seemed.')
-        print("It's you or the Wolf now, and the fight for survival begins.\n")
+        typing('You quickly draw your sword, '
+               'realizing that the forest is not as welcoming as it seemed.')
+        typing("Its you or the Wolf now, and the fight for survival begins.\n")
         continue_input()
 
         if battle(player, enemy_wolf):
@@ -775,18 +792,18 @@ def explore_forest(player):
             forest_wanderer = ForestWanderer()
 
             if forest_wanderer.is_alive:
-                print("You venture deeper into the Forest, the "
-                      "air growing thicker and the trees towering above.\n")
+                typing("You venture deeper into the Forest, the "
+                       "air growing thicker and the trees towering above.\n")
             continue_input()
             if battle(player, forest_wanderer):
                 player.inventory.append('villagers_amulet')
                 player.explored_locations.append('Forest')
                 forest_wanderer.death_cry()
 
-                print("After a brief search, "
-                      "you find the lost amulet deep within the forest.")
-                print("It's time to return it to its "
-                      "rightful owner in the village.\n")
+                typing("After a brief search, "
+                       "you find the lost amulet deep within the forest.")
+                typing("It's time to return it to its "
+                       "rightful owner in the village.\n")
                 continue_input()
                 auto_save(player)
                 forest_actions(player)
@@ -815,15 +832,15 @@ def village_actions(player):
         player.visited_locations.append('Village')
 
         show_stats(player)
-        print("As you step into the Village, you're greeted "
-              "by the warm smiles of the villagers.")
+        typing("As you step into the Village, you're greeted "
+               "by the warm smiles of the villagers.")
         continue_input()
 
-        print("Children are playing in the streets, and the aroma "
-              "of freshly baked bread fills the air.")
+        typing("Children are playing in the streets, and the aroma "
+               "of freshly baked bread fills the air.")
         continue_input()
 
-        print("A sense of community and peace envelops you.\n")
+        typing("A sense of community and peace envelops you.\n")
         continue_input()
 
     show_stats(player)
@@ -883,15 +900,15 @@ def explore_village(player):
     """
     if 'Village' not in player.explored_locations:
         show_stats(player)
-        print('You decide to wander through '
-              'the narrow streets of the Village...\n')
+        typing('You decide to wander through '
+               'the narrow streets of the Village...\n')
         continue_input()
 
         money_bag = random.randint(15, 30)
 
-        print('As you stroll, you notice something shiny '
-              'wedged between the cobblestones.')
-        print("It's a small bag of coins, seemingly forgotten or lost!")
+        typing('As you stroll, you notice something shiny '
+               'wedged between the cobblestones.')
+        typing("It's a small bag of coins, seemingly forgotten or lost!")
         print(f'*You acquire {money_bag} coins!*\n')
         continue_input()
 
@@ -899,8 +916,8 @@ def explore_village(player):
         player.explored_locations.append('Village')
 
         show_stats(player)
-        print("Feeling a bit richer and more familiar with the Village, "
-              "you ponder your next move.\n")
+        typing("Feeling a bit richer and more familiar with the Village, "
+               "you ponder your next move.\n")
         continue_input()
         village_actions(player)
 
@@ -926,14 +943,14 @@ def talk_to_villager(player):
                                  50,
                                  False)
 
-            print(f"Villager: Ah, {player.username}, you look like "
-                  "someone who could help us.")
-            print("I've lost a precious amulet in the Deep Forest. "
-                  "It's been in my family for generations.")
-            print("I would go myself, but the forest is too dangerous "
-                  "and filled with creatures.")
-            print("Would you be willing to help me retrieve it? "
-                  "The reward will be generous.\n")
+            typing(f"Villager: Ah, {player.username}, you look like "
+                   "someone who could help us.")
+            typing("I've lost a precious amulet in the Deep Forest. "
+                   "It's been in my family for generations.")
+            typing("I would go myself, but the forest is too dangerous "
+                   "and filled with creatures.")
+            typing("Would you be willing to help me retrieve it? "
+                   "The reward will be generous.\n")
             print(f"Quest: {forest_quest.name}")
             print(f"Description: {forest_quest.description}\n")
             print("Do you accept? (Y/N)")
@@ -941,22 +958,22 @@ def talk_to_villager(player):
             choice = input('# ').lower()
             if choice == 'y':
                 show_stats(player)
-                print("Villager: Excellent! Good luck!\n")
+                typing("Villager: Excellent! Good luck!\n")
                 continue_input()
                 player.forest_quest = True
 
             elif choice == 'n':
                 show_stats(player)
-                print("Villager: Oh, that's too bad. "
-                      "Maybe some other time then.\n")
+                typing("Villager: Oh, that's too bad. "
+                       "Maybe some other time then.\n")
                 continue_input()
 
             else:
                 invalid_answer('yes_no')
                 talk_to_villager(player)
         else:
-            print(f"Villager: Ah, {player.username}, "
-                  "have you found my amulet yet? (Y/N)\n")
+            typing(f"Villager: Ah, {player.username}, "
+                   "have you found my amulet yet? (Y/N)\n")
 
             choice = input('# ').lower()
 
@@ -970,11 +987,11 @@ def talk_to_villager(player):
                                          False)
 
                     show_stats(player)
-                    print("Villager: Ah, you've found my amulet!"
-                          " Thank you so much!")
-                    print("As promised, here is your reward.")
-                    print(f"*Villager hands you a pouch of coins. "
-                          f"(+{forest_quest.reward} coins)*\n")
+                    typing("Villager: Ah, you've found my amulet!"
+                           " Thank you so much!")
+                    typing("As promised, here is your reward.")
+                    typing("*Villager hands you a pouch of coins. "
+                           f"(+{forest_quest.reward} coins)*\n")
 
                     player.coins += forest_quest.reward
                     player.completed_quests.append('Forest Quest')
@@ -988,22 +1005,22 @@ def talk_to_villager(player):
 
                 else:
                     show_stats(player)
-                    print('Villager: Deception? In my village? '
-                          'You best not be lying.')
+                    typing('Villager: Deception? In my village? '
+                           'You best not be lying.')
                     print('*You feel a sense of shame*\n')
                     continue_input()
                     village_actions(player)
 
             elif choice == 'n':
                 show_stats(player)
-                print("Villager: I see. Please hurry, it means a lot to me.\n")
+                typing("Villager: Please hurry, it means a lot to me.\n")
                 continue_input()
 
             else:
                 invalid_answer('yes_no')
                 talk_to_villager(player)
     else:
-        print("Villager: Thanks a lot. You've done that for us!\n")
+        typing("Villager: Thanks a lot. You've done that for us!\n")
         continue_input()
 
 
@@ -1077,11 +1094,11 @@ def castle_actions(player):
         player.visited_locations.append('Castle')
 
         show_stats(player)
-        print("As you enter the castle gates, you feel a sense of grandeur.")
+        typing("As you enter the castle gates, you feel a sense of grandeur.")
         continue_input()
 
-        print("Stone walls tower above you, and the distant "
-              "sound of clashing swords fills the air.\n")
+        typing("Stone walls tower above you, and the distant "
+               "sound of clashing swords fills the air.\n")
         continue_input()
 
     show_stats(player)
@@ -1113,8 +1130,8 @@ def castle_actions(player):
     elif choice == '4':
         if not player.doomed_path_quest:
             show_stats(player)
-            print("Guard: I can't let you pass, it's too "
-                  "dangerous beyond this point.\n")
+            typing("Guard: I can't let you pass, it's too "
+                   "dangerous beyond this point.\n")
             continue_input()
             castle_actions(player)
 
@@ -1128,7 +1145,7 @@ def castle_actions(player):
 
         else:
             show_stats(player)
-            print('Guard: Good luck, great warrior.\n')
+            typing('Guard: Good luck, great warrior.\n')
             continue_input()
             player.location = 'Doomed Path'
             doomed_path_actions(player)
@@ -1155,12 +1172,12 @@ def talk_to_king(player):
                                 100,
                                 False)
 
-            print(f"King: Hey you! You appear before me just as a new "
-                  "task arises that requires... competence.")
-            print("An ogre on the Doomed Path disrupts trade and "
-                  "endangers the village.")
-            print("Would you be willing to slay it? The reward "
-                  "will be generous.\n")
+            typing(f"King: Hey you! You appear before me just as a new "
+                   "task arises that requires... competence.")
+            typing("An ogre on the Doomed Path disrupts trade and "
+                   "endangers the village.")
+            typing("Would you be willing to slay it? The reward "
+                   "will be generous.\n")
 
             print(f"Quest: {kings_quest.name}")
             print(f"Description: {kings_quest.description}\n")
@@ -1170,22 +1187,22 @@ def talk_to_king(player):
 
             if choice == 'y':
                 show_stats(player)
-                print("King: Brilliant! "
-                      "May fortune favor you on your quest.\n")
+                typing("King: Brilliant! "
+                       "May fortune favor you on your quest.\n")
                 continue_input()
                 player.doomed_path_quest = True
 
             elif choice == 'n':
                 show_stats(player)
-                print("King: Hmph. Reconsider your decision, or "
-                      "find your way out of my presence.\n")
+                typing("King: Hmph. Reconsider your decision, or "
+                       "find your way out of my presence.\n")
                 continue_input()
 
             else:
                 invalid_answer('yes_no')
                 talk_to_king(player)
         else:
-            print(f"King: Hey you, have you slain the ogre yet? (Y/N)\n")
+            typing(f"King: Hey you, have you slain the ogre yet? (Y/N)\n")
 
             choice = input('# ').lower()
 
@@ -1199,10 +1216,10 @@ def talk_to_king(player):
                                         False)
 
                     show_stats(player)
-                    print("King: You've done it! The Doomed Path "
-                          "is safe once more!")
-                    print("As promised, here is your reward. A King's "
-                          "word is his bond.\n")
+                    typing("King: You've done it! The Doomed Path "
+                           "is safe once more!")
+                    typing("As promised, here is your reward. A King's "
+                           "word is his bond.\n")
                     print(f"*The King gives you a hefty pouch of coins. "
                           f"(+{kings_quest.reward} coins)*\n")
 
@@ -1217,9 +1234,9 @@ def talk_to_king(player):
                     kings_quest.is_completed = True
 
                     show_stats(player)
-                    print("King: Visit my Forge Master")
-                    print("I told him to make your armor better. And you "
-                          "can rest before leaving.\n")
+                    typing("King: Visit my Forge Master")
+                    typing("I told him to make your armor better. And you "
+                           "can rest before leaving.\n")
                     continue_input()
 
                     auto_save(player)
@@ -1227,22 +1244,22 @@ def talk_to_king(player):
 
                 else:
                     show_stats(player)
-                    print('King: How dare you lie to your King? Return '
-                          'when the deed is done.')
+                    typing('King: How dare you lie to your King? Return '
+                           'when the deed is done.')
                     print('*You feel a sense of shame*\n')
                     continue_input()
                     castle_actions(player)
 
             elif choice == 'n':
                 show_stats(player)
-                print("King: Time is of the essence. Please hurry.\n")
+                typing("King: Time is of the essence. Please hurry.\n")
                 continue_input()
 
             else:
                 invalid_answer('yes_no')
                 talk_to_king(player)
     else:
-        print("King: You've done a great service to the kingdom. Thank you!\n")
+        typing("King: You've done a great deed to the kingdom. Thank you!\n")
         continue_input()
 
 
@@ -1252,10 +1269,10 @@ def forge_master(player):
     """
     show_stats(player)
     if "hidden_upgrade_token" in player.inventory:
-        print(f'Forge Master: Ah, {player.username}, your deeds '
-              'have not gone unnoticed.')
-        print("Hand over your armor. I'll fortify it for you.")
-        print('While you wait, You can rest and heal your wounds\n')
+        typing(f'Forge Master: Ah, {player.username}, your deeds '
+               'have not gone unnoticed.')
+        typing("Hand over your armor. I'll fortify it for you.")
+        typing('While you wait, You can rest and heal your wounds\n')
 
         player.max_hp += 50
         player.hp = player.max_hp
@@ -1264,7 +1281,7 @@ def forge_master(player):
         auto_save(player)
 
     else:
-        print("Forge Master: I'm busy right now. Come back later.\n")
+        typing("Forge Master: I'm busy right now. Come back later.\n")
         continue_input()
 
 
@@ -1278,8 +1295,8 @@ def doomed_path_actions(player):
         show_stats(player)
         ogre = Ogre()
 
-        print("As soon as you step into the Doomed Path")
-        print("The Ogre attack you. And the battle begins\n")
+        typing("As soon as you step into the Doomed Path")
+        typing("The Ogre attack you. And the battle begins\n")
         continue_input()
 
         if battle(player, ogre):
@@ -1313,7 +1330,7 @@ def doomed_path_actions(player):
 
     elif choice == '3':
         show_stats(player)
-        print('This is a way to the Dragon. Are you strong enough? (Y/N)')
+        typing('This is a way to the Dragon. Are you strong enough? (Y/N)')
 
         choice = input('# ').lower()
 
@@ -1355,10 +1372,10 @@ def explore_doomed_path(player):
         money_bag = random.randint(30, 50)
         player.potions += 1
 
-        print("As you sift through the debris and remnants of the "
-              "Ogre's lair, your eyes catch a glint.")
-        print("It's a small stash of gold coins, "
-              "likely plundered by the Ogre!")
+        typing("As you sift through the debris and remnants of the "
+               "Ogre's lair, your eyes catch a glint.")
+        typing("It's a small stash of gold coins, "
+               "likely plundered by the Ogre!")
         print(f'*You acquire {money_bag} coins! And found 1 Potion*\n')
         continue_input()
 
@@ -1366,8 +1383,8 @@ def explore_doomed_path(player):
         player.explored_locations.append('Doomed Path')
 
         show_stats(player)
-        print("Feeling a bit richer and more relieved that the Ogre is "
-              "no more, you ponder your next move.\n")
+        typing("Feeling a bit richer and more relieved that the Ogre is "
+               "no more, you ponder your next move.\n")
         continue_input()
         doomed_path_actions(player)
     else:
@@ -1435,29 +1452,30 @@ def explore_mountain_peak(player):
     """
     if 'Mountain Peak' not in player.explored_locations:
         show_stats(player)
-        print('You stand over the defeated dragon, its remaining eye '
-              'staring lifelessly into the void.\n')
+        typing('You stand over the defeated dragon, its remaining eye '
+               'staring lifelessly into the void.\n')
         continue_input()
 
-        print("A sense of accomplishment washes over you. Your journey, "
-              "fraught with peril, has come to an end.")
-        print("You've conquered the Mountain Peak and vanquished the "
-              "dragon that terrorized these lands.")
+        typing("A sense of accomplishment washes over you. Your journey, "
+               "fraught with peril, has come to an end.")
+        typing("You've conquered the Mountain Peak and vanquished the "
+               "dragon that terrorized these lands.")
         continue_input()
 
         show_stats(player)
-        print("As you prepare to leave, you remember the "
-              "Dragon's Eye you've taken.")
-        print("The Stranger who aided you at the beginning of "
-              "your journey might find it valuable.")
-        print("Perhaps it's time to pay him a visit and bring "
-              "closure to your adventure.\n")
+        typing("As you prepare to leave, you remember the "
+               "Dragon's Eye you've taken.")
+        typing("The Stranger who aided you at the beginning of "
+               "your journey might find it valuable.")
+        typing("Perhaps it's time to pay him a visit and bring "
+               "closure to your adventure.\n")
         continue_input()
 
         player.explored_locations.append('Mountain Peak')
 
         show_stats(player)
-        print("Feeling victorious and fulfilled, you ponder your next move.\n")
+        typing("Feeling victorious and fulfilled, "
+               "you ponder your next move.\n")
         continue_input()
         mountain_actions(player)
 
@@ -1475,32 +1493,32 @@ def game_completion(player):
     Game complete function
     """
     show_stats(player)
-    print("As you hand over the dragon's eye to the Stranger, "
-          "a sense of finality washes over you.")
+    typing("As you hand over the dragon's eye to the Stranger, "
+           "a sense of finality washes over you.")
     continue_input()
 
-    print("The Stranger smiles, 'You've done it. You've not only "
-          "defeated the dragon but also fulfilled a destiny.'")
+    typing("The Stranger smiles, 'You've done it. You've not only "
+           "defeated the dragon but also fulfilled a destiny.'")
     continue_input()
 
-    print("'The villagers may never know the full extent of your heroism, "
-          "but their lives are better because of you.'")
+    typing("'The villagers may never know the full extent of your heroism, "
+           "but their lives are better because of you.'")
     continue_input()
 
-    print("You realize that your adventure has come to an end, but "
-          "the legends of your bravery will echo through time.")
+    typing("You realize that your adventure has come to an end, but "
+           "the legends of your bravery will echo through time.")
     continue_input()
 
-    print("The Stranger adds, 'Who knows, maybe our paths will cross "
-          "again in another life, another adventure.'")
+    typing("The Stranger adds, 'Who knows, maybe our paths will cross "
+           "again in another life, another adventure.'")
     continue_input()
 
-    print("As you step out of the cave, back into the world you've "
-          "saved, you can't help but wonder what's next.")
+    typing("As you step out of the cave, back into the world you've "
+           "saved, you can't help but wonder what's next.")
     continue_input()
 
-    print("Thank you for playing! Your adventure has come to an end, "
-          "but the future is an open book.")
+    typing("Thank you for playing! Your adventure has come to an end, "
+           "but the future is an open book.")
     continue_input()
 
 
@@ -1543,12 +1561,12 @@ def exit_game():
     text_align_center("|         FAREWELL, HERO          |")
     text_align_center("===================================")
 
-    print("\nAs you step away from the world of adventure, the "
-          "echoes of your deeds fade into legend.")
-    print("May your path be clear, your sword sharp, "
-          "and your courage unyielding.")
-    print("Until we meet again, safe travels!\n")
-    print("Goodbye, and thank you for playing!")
+    typing("\nAs you step away from the world of adventure, the "
+           "echoes of your deeds fade into legend.")
+    typing("May your path be clear, your sword sharp, "
+           "and your courage unyielding.")
+    typing("Until we meet again, safe travels!\n")
+    typing("Goodbye, and thank you for playing!")
 
     quit()
 
