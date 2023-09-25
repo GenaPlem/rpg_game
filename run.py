@@ -200,7 +200,10 @@ def clear():
     """
     Helper function to clear the terminal
     """
-    os.system('clear')
+    if os.name == 'posix':
+        os.system('clear')
+    elif os.name == 'nt':
+        os.system('cls')
 
 
 def ascii_art_logo():
