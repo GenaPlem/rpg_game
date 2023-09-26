@@ -190,6 +190,18 @@
 
  - [Python](https://en.wikipedia.org/wiki/Python_(programming_language))
 
+ - Libraries Using: 
+   - `os` library:<br>
+      to create a function that clear the terminal
+   - `shutil` library:<br>
+      to get a terminal width
+   - `random` library:<br>
+      to create a random chance for different events (attack/special attack, defend damage, counter-attack chance, coins drop)
+   - `uuid` library:<br>
+      to create a unique code for loading saves
+   - `time` library:<br>
+      to create typing effect
+
 - - -
 
 ## Frameworks, Libraries & Programs
@@ -217,12 +229,9 @@ No errors and warnings found with [PEP8 CI linter](https://pep8ci.herokuapp.com/
 
 ![PEP8 CI Linter](./README/screenshots/pep8_linter.png)
 
-
-
 ### Manual testing
 
 During the development of the game, extensive manual testing was performed to ensure the game runs smoothly and is free of bugs. Below are some of the key areas that were focused on:
-
 
 - **Gameplay Mechanics**<br>
 
