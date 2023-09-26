@@ -1346,6 +1346,7 @@ def doomed_path_actions(player):
 
         else:
             invalid_answer('yes_no')
+            doomed_path_actions(player)
 
     elif choice == '4':
         use_potion(player)
