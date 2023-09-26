@@ -7,4 +7,6 @@ __pycache__/
 node_modules/
 .github/
 .fleet
+.idea
 creds.json
+.DS_Store
