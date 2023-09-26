@@ -297,6 +297,9 @@ def invalid_answer(validation_type):
     elif validation_type == 'menu':
         print('No such options! Please select number from menu options.\n')
 
+    elif validation_type == 'uniccode':
+        print("No saved game found with that unique code.")
+
     else:
         print('Something went wrong!')
 
@@ -443,8 +446,7 @@ def load_game():
         return player
 
     else:
-        print("No saved game found with that unique code.")
-        continue_input()
+        invalid_answer('uniccode')
         main_menu()
 
 
@@ -1073,6 +1075,7 @@ def shop(player):
             print('Looks like you have not enough money!\n')
             continue_input()
             shop(player)
+            
     elif choice == '3':
         show_stats(player)
         print('You leave the Shop\n')
@@ -1080,6 +1083,7 @@ def shop(player):
 
         player.location = 'Village'
         village_actions(player)
+        
     else:
         invalid_answer('options')
         shop(player)
@@ -1411,6 +1415,7 @@ def mountain_actions(player):
             print('*You extract Dragons Eye*\n')
             player.inventory.append('dragons_eye')
             auto_save(player)
+            
         else:
             game_over(player, dragon)
 
